@@ -129,6 +129,7 @@ static class Tests
         var legacy = System.Text.Json.JsonSerializer.Deserialize<VoiceSettings>("{\"Input\":2,\"Output\":1}");
         Assert(legacy != null && legacy.Bass == 0 && legacy.Input == 2, "Old settings migration failed");
         log.Add("PASS previous settings load with neutral bass");
+        HeadphoneEqTests.Run(log);
         FeatureTests.Run(log);
         File.WriteAllLines(Path.Combine(AppContext.BaseDirectory, "test-results.txt"), log);
     }

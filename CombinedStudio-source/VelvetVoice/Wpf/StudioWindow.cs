@@ -12,6 +12,7 @@ internal sealed class StudioWindow
 {
     internal static W.Window? Owner;
     readonly MainForm model;
+    readonly HeadphoneEqPage headphoneEq;
     readonly UiControls ui=new();
     readonly Dictionary<string,W.FrameworkElement> pages=new();
     readonly Dictionary<string,C.RadioButton> navigation=new();
@@ -22,6 +23,7 @@ internal sealed class StudioWindow
     internal C.RadioButton NavigationItem(string name)=>navigation[name];
     internal string SelectedPage=>current;
     internal MainForm Model=>model;
+    internal void VerifyEq()=>headphoneEq.Verify();
     internal void SelectPage(string name)=>Show(name);
     internal async Task Initialize(){await model.UiInitialize();ui.Sync();}
     readonly D.DispatcherTimer timer=new(){Interval=TimeSpan.FromMilliseconds(100)};
@@ -42,15 +44,16 @@ internal sealed class StudioWindow
         hostWindow=sharedWindow??window;Owner=hostWindow;model=new MainForm(isolated);WpfDialogs.Model=model;
         using(var image=Assembly.GetExecutingAssembly().GetManifestResourceStream("VelvetVoice.Assets.hero.jpg")){if(image!=null){var bitmap=new Imaging.BitmapImage();bitmap.BeginInit();bitmap.CacheOption=Imaging.BitmapCacheOption.OnLoad;bitmap.StreamSource=image;bitmap.EndInit();bitmap.Freeze();Get<C.Border>("HeroArt").Background=new M.ImageBrush(bitmap){Stretch=M.Stretch.UniformToFill};}}
         if(model.Icon!=null)window.Icon=System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon(model.Icon.Handle,W.Int32Rect.Empty,Imaging.BitmapSizeOptions.FromEmptyOptions());
-        pages["Studio"]=Studio();pages["Soundboard + clips"]=Board();pages["Voice changer"]=Voice();pages["Setup & help"]=Help();
-        string[] glyphs={"\uE720","\uE8D6","\uE767","\uE946"};int index=0;
+        headphoneEq=new HeadphoneEqPage(isolated);
+        pages["Studio"]=Studio();pages["Soundboard + clips"]=Board();pages["Voice changer"]=Voice();pages["Setup & help"]=Help();pages["Headphone EQ"]=headphoneEq.Root;
+        string[] glyphs={"\uE720","\uE8D6","\uE767","\uE946","\uE7F6"};int index=0;
         foreach(string name in pages.Keys){var row=new C.StackPanel{Orientation=C.Orientation.Horizontal};row.Children.Add(new C.TextBlock{Text=glyphs[index++],FontFamily=new M.FontFamily("Segoe MDL2 Assets"),FontSize=19,Width=32,Foreground=UiControls.Muted});row.Children.Add(new C.TextBlock{Text=name});var nav=new C.RadioButton{Content=row,Style=(W.Style)window.FindResource("NavItem"),GroupName="VelvetVoiceNavigation",Tag=name};nav.Checked+=(_,_)=>Show(name);nav.Click+=(_,_)=>Activated?.Invoke();navigation[name]=nav;Get<C.StackPanel>("Navigation").Children.Add(nav);}
         Get<C.Button>("MinButton").Click+=(_,_)=>hostWindow.WindowState=W.WindowState.Minimized;
         Get<C.Button>("MaxButton").Click+=(_,_)=>hostWindow.WindowState=hostWindow.WindowState==W.WindowState.Maximized?W.WindowState.Normal:W.WindowState.Maximized;
         Get<C.Button>("CloseButton").Click+=(_,_)=>hostWindow.Close();
         timer.Tick+=(_,_)=>{if(hostWindow.WindowState!=W.WindowState.Minimized)ui.Sync();};timer.Start();
         ui.Watch(()=>{Get<C.TextBlock>("Status").Text=model.UiStatus;Get<C.TextBlock>("Status").ToolTip=model.UiStatus;Get<C.TextBlock>("EngineStatus").Text=model.UiLive?"Studio is live":"Ready when you are";Get<C.TextBlock>("EngineStatus").Foreground=model.UiLive?UiControls.Tone("#2FCB8D"):UiControls.Ink;Get<C.TextBlock>("EngineDetail").Text=model.UiLive?"Your selected output is active.":"Start processing in Studio.";});
-        hostWindow.Closed+=(_,_)=>{if(closing)return;closing=true;timer.Stop();model.UiShutdown();model.Dispose();WpfDialogs.Model=null;Owner=null;};
+        hostWindow.Closed+=(_,_)=>{if(closing)return;closing=true;timer.Stop();headphoneEq.Dispose();model.UiShutdown();model.Dispose();WpfDialogs.Model=null;Owner=null;};
         Show("Studio");
     }
     void Show(string name)
@@ -61,6 +64,7 @@ internal sealed class StudioWindow
             "Studio"=>("Your voice. Smooth and clear.","Shape your microphone with gentle EQ, compression, and a protective limiter. Every whisper stays in the conversation."),
             "Soundboard + clips"=>("Keep the moment. Replay the fun.","Build your soundboard and save recent audio locally. Rolling capture and playback start only when you choose."),
             "Voice changer"=>("Find your voice character.","Explore subtle pitch shifts while keeping your Studio settings. Soundboard clips retain their own pitch."),
+            "Headphone EQ"=>("Your headphones. Your balance.","Give music and games a smoother shape with a personal stereo equalizer and listening presets."),
             _=>("A clear route from mic to game.","Choose your devices, check the signal path, and keep your voice studio working smoothly.")};
         if(navigation.TryGetValue(name,out var nav))nav.IsChecked=true;ui.Sync();
     }

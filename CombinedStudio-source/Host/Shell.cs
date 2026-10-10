@@ -47,7 +47,9 @@ internal sealed class Shell {
   try{
    await Task.Delay(600);Performance.SelectPage("Overview");Window.Width=1920;Window.Height=1000;
    Check(W.Application.Current.Windows.Cast<W.Window>().Count(x=>x.IsVisible)==1,"one visible application window");
-   foreach(string page in new[]{"Studio","Soundboard + clips","Voice changer","Setup & help"}){Voice.SelectPage(page);await Task.Delay(80);Check(Active=="Velvet Voice"&&voiceRoot.Visibility==W.Visibility.Visible&&C.Grid.GetColumn(voiceRail)==1,"Velvet Voice route: "+page);}
+   foreach(string page in new[]{"Studio","Soundboard + clips","Voice changer","Setup & help","Headphone EQ"}){Voice.SelectPage(page);await Task.Delay(80);Check(Active=="Velvet Voice"&&voiceRoot.Visibility==W.Visibility.Visible&&C.Grid.GetColumn(voiceRail)==1,"Velvet Voice route: "+page);}
+   Voice.SelectPage("Headphone EQ");Snapshot(Path.Combine(folder,"combined-headphone-eq.png"));
+   Voice.VerifyEq();Check(true,"headphone EQ preset, slider, save/delete and bypass bindings; no audio autostart");
    Voice.SelectPage("Studio");Snapshot(Path.Combine(folder,"combined-velvet-voice.png"));
    var slider=Voice.Model.UiSliders.First().Value;int original=slider.Value;slider.Value=original+1;
    foreach(string page in new[]{"Overview","PC monitor","Disk explorer","Game library","Optimizations","Windows tuning","Game profiles","Session mode","Background apps","Startup apps","Drivers","Storage & apps","Maintenance","Diagnostics","Compare runs","Recovery","Updates & notes","About & sources","Hardware"}){Performance.SelectPage(page);await Task.Delay(100);Check(Active=="FramePilot"&&performanceRoot.Visibility==W.Visibility.Visible&&C.Grid.GetColumn(performanceRail)==1,"FramePilot route: "+page);}
@@ -58,7 +60,7 @@ internal sealed class Shell {
    Activate("Velvet Voice");Check(slider.Value==original+1&&Voice.SelectedPage=="Studio","voice settings and selected page survive repeated switches");slider.Value=original;
    Activate("FramePilot");var voiceNav=Voice.NavigationItem("Studio");voiceNav.RaiseEvent(new System.Windows.Input.MouseButtonEventArgs(System.Windows.Input.Mouse.PrimaryDevice,Environment.TickCount,System.Windows.Input.MouseButton.Left){RoutedEvent=W.UIElement.PreviewMouseLeftButtonDownEvent});Check(Active=="FramePilot","rails stay stable during mouse down");voiceNav.RaiseEvent(new W.RoutedEventArgs(C.Primitives.ButtonBase.ClickEvent));Check(Active=="Velvet Voice","clicking the already selected voice page activates its workspace");var performanceNav=Performance.NavigationItem("Overview");performanceNav.RaiseEvent(new W.RoutedEventArgs(C.Primitives.ButtonBase.ClickEvent));Check(Active=="FramePilot","clicking the already selected Home page activates its workspace");
    Check(!Voice.Model.UiLive,"microphone processing remains off until requested");
-   foreach(int width in new[]{1280,1600}){Window.Width=width;Window.Height=800;foreach(string app in new[]{"FramePilot","Velvet Voice"}){Activate(app);Window.UpdateLayout();Check(performanceRail.ActualWidth>200&&voiceRail.ActualWidth>200,"both navigation rails visible at "+width+" in "+app);Snapshot(Path.Combine(folder,"combined-"+app.Replace(" ","")+"-"+width+".png"));}}
+   foreach(int width in new[]{1280,1600}){Window.Width=width;Window.Height=800;foreach(string app in new[]{"FramePilot","Velvet Voice"}){Activate(app);Window.UpdateLayout();Check(performanceRail.ActualWidth>200&&voiceRail.ActualWidth>200,"both navigation rails visible at "+width+" in "+app);Snapshot(Path.Combine(folder,"combined-"+app.Replace(" ","")+"-"+width+".png"));}Voice.SelectPage("Headphone EQ");Snapshot(Path.Combine(folder,"combined-headphone-eq-"+width+".png"));}
    log.AddRange(VelvetVoice.WpfDialogs.Verify());
    File.WriteAllLines(Path.Combine(folder,"combined-tests.txt"),log);
   }catch(Exception error){Environment.ExitCode=1;File.WriteAllText(Path.Combine(folder,"combined-error.txt"),error.ToString());}
