@@ -1,0 +1,22 @@
+{
+  "Version": 2,
+  "Game": "Valorant",
+  "Name": "Starter - balanced clarity",
+  "ConfigPath": null,
+  "Quality": 0,
+  "Cap": 200,
+  "Render": 16,
+  "Simulation": 8,
+  "Resolution": 0,
+  "Vsync": false,
+  "DisableFrameGen": true,
+  "DisableNanite": true,
+  "Graphics": {
+    "sg.TextureQuality": 2,
+    "sg.ViewDistanceQuality": 2,
+    "sg.ShadowQuality": 0,
+    "sg.EffectsQuality": 0,
+    "sg.PostProcessQuality": 0,
+    "sg.FoliageQuality": 0
+  }
+}

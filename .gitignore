@@ -1,0 +1,30 @@
+# Earlier source copies and generated distributions
+/outputs/
+/source-review/
+/VelvetVoice-source/
+
+# .NET and editor output
+**/bin/
+**/obj/
+.vs/
+.idea/
+*.user
+*.suo
+*.log
+**/build-log.txt
+**/publish-log.txt
+
+# Python caches (keep bundled Python runtimes and native dependencies)
+**/__pycache__/
+*.pyc
+*.pyo
+
+# Local secrets, recordings and validation output
+.env
+.env.*
+!.env.example
+*.pfx
+*.p12
+*.key
+/test-results/
+**/test-results.txt

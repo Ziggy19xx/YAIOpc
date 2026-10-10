@@ -1,0 +1,9 @@
+Validated portable combined build on Windows x64:
+- 56 shared-window UI checks: all 23 routes, dual rail ordering, already-selected navigation clicks, retained settings, 20 synthetic audio continuity switches, dark dialogs, 1280/1600/1920 layouts.
+- 97 FramePilot service checks using temporary fixture files and registry entries.
+- 31 offline Velvet Voice audio/soundboard/clip groups, including Python/native RNNoise parity and Silero processing.
+- 29 Python monitor checks: real read-only hardware inventory/samples, restart/cancellation/cleanup, model loading, and isolated storage fixture checks.
+- 6 saved-clip Python protocol tests.
+
+No microphone capture, audio playback, game launch, driver installation or real tuning operation was performed. Live microphone routing and subjective audio quality require user testing with the intended devices.
+

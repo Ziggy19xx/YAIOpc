@@ -1,0 +1,5 @@
+RNNoise v0.2, official model 0b50c45. Sources are unmodified.
+From a Visual Studio x64 Native Tools Command Prompt, in NativeSource:
+cl /nologo /O2 /MT /LD /DWIN32 /DRNNOISE_BUILD /DDLL_EXPORT /D_USE_MATH_DEFINES /DFLOATING_POINT /DOPUS_ARCHMASK=0 /D__SSE2__ /Iinclude /Isrc src\denoise.c src\rnn.c src\pitch.c src\kiss_fft.c src\celt_lpc.c src\nnet.c src\nnet_default.c src\parse_lpcnet_weights.c src\rnnoise_data.c src\rnnoise_tables.c /link /OUT:..\Assets\rnnoise.dll
+Upstream source: https://github.com/xiph/rnnoise/tree/v0.2
+Official model: https://media.xiph.org/rnnoise/models/rnnoise_data-0b50c45.tar.gz
