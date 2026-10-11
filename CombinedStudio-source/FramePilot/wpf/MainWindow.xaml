@@ -2,7 +2,7 @@
  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
  xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
  xmlns:wfi="clr-namespace:System.Windows.Forms.Integration;assembly=WindowsFormsIntegration"
- Title="FramePilot" Width="1320" Height="860" MinWidth="1050" MinHeight="700"
+ Title="YAIOpc" Width="1320" Height="860" MinWidth="1050" MinHeight="700"
  WindowStyle="None" ResizeMode="CanResize" Background="#0D0B0A" Foreground="#F3ECE4"
  FontFamily="Segoe UI Variable Display, Segoe UI" FontSize="14"
  WindowStartupLocation="CenterScreen" UseLayoutRounding="True" TextOptions.TextFormattingMode="Ideal">
@@ -221,7 +221,7 @@
    <DockPanel>
     <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="8,0,0,18">
      <Viewbox Width="44" Height="30" Margin="0,0,12,0"><Path Fill="#F3ECE4" Data="M7,3 C4,3 2,6 1.2,10.5 L0.2,16.5 C-0.2,19 1,21 3,21 C4.2,21 5,20.2 6,19 L8,16.5 L16,16.5 L18,19 C19,20.2 19.8,21 21,21 C23,21 24.2,19 23.8,16.5 L22.8,10.5 C22,6 20,3 17,3 Z"/></Viewbox>
-     <StackPanel VerticalAlignment="Center"><TextBlock Text="FramePilot" FontSize="22" FontWeight="SemiBold" Foreground="{StaticResource Ink}"/><TextBlock Text="PERFORMANCE STUDIO" FontSize="10" Foreground="{StaticResource Muted}"/></StackPanel>
+     <StackPanel VerticalAlignment="Center"><TextBlock Text="YAIOpc" FontSize="22" FontWeight="SemiBold" Foreground="{StaticResource Ink}"/><TextBlock Text="PERFORMANCE STUDIO" FontSize="10" Foreground="{StaticResource Muted}"/></StackPanel>
     </StackPanel>
     <Button x:Name="HelpButton" Style="{StaticResource LinkButton}" DockPanel.Dock="Bottom" Margin="0" HorizontalAlignment="Stretch" AutomationProperties.Name="About and sources">
      <StackPanel Orientation="Horizontal"><Border Width="36" Height="36" CornerRadius="18" Background="#221C18"><TextBlock Text="&#xE897;" FontFamily="{StaticResource IconFont}" FontSize="16" Foreground="{StaticResource Muted}" HorizontalAlignment="Center" VerticalAlignment="Center"/></Border>
@@ -235,8 +235,15 @@
     </Border>
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
      <StackPanel><StackPanel x:Name="Navigation"/>
-      <TextBlock Text="MORE TOOLS" FontSize="10.5" FontWeight="SemiBold" Foreground="{StaticResource Dim}" Margin="14,18,0,6"/>
-      <StackPanel x:Name="NavigationMore"/></StackPanel>
+      <Expander x:Name="MoreTools" Header="More tools" IsExpanded="False" Margin="0,12,0,0" Foreground="{StaticResource Muted}" AutomationProperties.Name="More tools">
+       <Expander.Template><ControlTemplate TargetType="Expander"><StackPanel>
+        <ToggleButton x:Name="Toggle" IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}" Content="{TemplateBinding Header}" Foreground="{TemplateBinding Foreground}" FontSize="13" Cursor="Hand" AutomationProperties.Name="{Binding Path=(AutomationProperties.Name), RelativeSource={RelativeSource TemplatedParent}}">
+         <ToggleButton.Template><ControlTemplate TargetType="ToggleButton"><Border x:Name="HeaderBorder" Background="Transparent" CornerRadius="8" Padding="14,10"><DockPanel><TextBlock x:Name="Chevron" DockPanel.Dock="Right" Text="&#xE76C;" FontFamily="Segoe MDL2 Assets" FontSize="12" VerticalAlignment="Center"/><ContentPresenter VerticalAlignment="Center"/></DockPanel></Border><ControlTemplate.Triggers><Trigger Property="IsChecked" Value="True"><Setter TargetName="Chevron" Property="Text" Value="&#xE70D;"/></Trigger><Trigger Property="IsMouseOver" Value="True"><Setter TargetName="HeaderBorder" Property="Background" Value="#221C18"/></Trigger><Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="HeaderBorder" Property="Background" Value="#46301F"/></Trigger></ControlTemplate.Triggers></ControlTemplate></ToggleButton.Template>
+        </ToggleButton>
+        <ContentPresenter x:Name="ToolsContent" ContentSource="Content" Visibility="Collapsed"/>
+       </StackPanel><ControlTemplate.Triggers><Trigger Property="IsExpanded" Value="True"><Setter TargetName="ToolsContent" Property="Visibility" Value="Visible"/></Trigger></ControlTemplate.Triggers></ControlTemplate></Expander.Template>
+       <StackPanel x:Name="NavigationMore"/>
+      </Expander></StackPanel>
     </ScrollViewer>
    </DockPanel>
   </Border>

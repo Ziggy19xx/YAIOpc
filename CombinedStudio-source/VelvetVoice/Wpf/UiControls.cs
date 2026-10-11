@@ -17,7 +17,7 @@ internal sealed class UiControls
     internal static C.StackPanel Section(string title,string? description=null){var stack=new C.StackPanel();var heading=Text(title,17);heading.FontWeight=W.FontWeights.SemiBold;stack.Children.Add(heading);if(description!=null)stack.Children.Add(Text(description,12,Muted));return stack;}
     internal void Watch(Action action)=>updates.Add(action);
     internal void Sync(){if(syncing)return;syncing=true;try{foreach(var update in updates)update();}finally{syncing=false;}}
-    internal void Write(Action action){if(syncing)return;try{action();Sync();}catch(Exception error){W.MessageBox.Show(StudioWindow.Owner,error.GetBaseException().Message,"Velvet Voice",W.MessageBoxButton.OK,W.MessageBoxImage.Information);}}
+    internal void Write(Action action){if(syncing)return;try{action();Sync();}catch(Exception error){W.MessageBox.Show(StudioWindow.Owner,error.GetBaseException().Message,"Velvet Audio",W.MessageBoxButton.OK,W.MessageBoxImage.Information);}}
     void Observe(F.Control source,W.FrameworkElement target){Watch(()=>{target.IsEnabled=source.Enabled;});W.Automation.AutomationProperties.SetName(target,string.IsNullOrEmpty(source.AccessibleName)?source.Text:source.AccessibleName);}
     internal W.FrameworkElement Convert(F.Control source)
     {

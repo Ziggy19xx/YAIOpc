@@ -53,7 +53,13 @@ namespace FramePilot {
   bool workspaceActive=true;
   internal RadioButton NavigationItem(string name){return navigation[name];}
   internal string SelectedPage {get{return page;}}
+  internal bool MoreToolsExpanded {get{return Get<Expander>("MoreTools").IsExpanded;}set{Get<Expander>("MoreTools").IsExpanded=value;}}
+  internal Expander MoreToolsMenu=>Get<Expander>("MoreTools");
+  internal IEnumerable<RadioButton> PrimaryNavigation=>PrimaryNav.Select(item=>navigation[item[0]]);
+  internal IEnumerable<RadioButton> NavigationItems=>navigation.Values;
+  internal void ClearNavigationSelection(){foreach(var item in navigation.Values)item.IsChecked=false;UpdateNavGlyphs();}
   internal void SelectPage(string name){Navigate(name);}
+  internal void StartLiveMonitoring(){features.WpfMonitoring=true;Sync();}
   internal void SetWorkspaceActive(bool active){workspaceActive=active;features.WpfPause(!active||Window.WindowState==WindowState.Minimized);monitorPage.Model.SetActive(active&&page=="PC monitor"&&Window.WindowState!=WindowState.Minimized);}
   readonly MainForm features;
   readonly MonitorPage monitorPage;readonly DiskExplorerPage diskExplorer;readonly GameLibraryPage gameLibrary;
@@ -113,6 +119,7 @@ namespace FramePilot {
   void QueueSync(){if(pending||closing||!ready)return;pending=true;Window.Dispatcher.BeginInvoke(new Action(delegate{pending=false;if(!closing&&!features.IsDisposed)Sync();}));}
   void Navigate(string name){if(!ready)return;if(Activated!=null)Activated();Guard(delegate{if(features.WpfPage!=name)features.WpfNavigate(name);Display(name);Sync();});}
   void Display(string name){
+   if(!PrimaryNav.Any(item=>item[0]==name))MoreToolsExpanded=true;
    bool changed=page!=name;page=name;diskExplorer.Visibility=name=="Disk explorer"?Visibility.Visible:Visibility.Collapsed;monitorPage.Visibility=name=="PC monitor"?Visibility.Visible:Visibility.Collapsed;monitorPage.Model.SetActive(workspaceActive&&name=="PC monitor"&&Window.WindowState!=WindowState.Minimized);
    bool tools=name!="Overview"&&name!="Optimizations"&&name!="PC monitor"&&name!="Disk explorer"&&name!="Game library";
    host.Visibility=Visibility.Collapsed;
@@ -373,15 +380,3 @@ namespace FramePilot {
   static IEnumerable<Forms.Control> AllForms(Forms.Control source){foreach(Forms.Control child in source.Controls){yield return child;foreach(var nested in AllForms(child))yield return nested;}}
  }
 }
-
-
-
-
-
-
-
-
-
-
-
-

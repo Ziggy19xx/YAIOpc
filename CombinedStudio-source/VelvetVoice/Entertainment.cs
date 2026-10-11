@@ -21,7 +21,7 @@ public record SoundEntry(string Id, string Name, string File, float Gain = .7f, 
 public record BoardConfig(List<SoundEntry> Sounds, int ClipSeconds = 5, string? ClipSource = null,
     bool ClipDesktop = true, KeyBinding? ClipKey = null, KeyBinding? StopKey = null,
     float Master = .7f, string VoicePreset = "Off", string? PreviewDevice = null,
-    KeyBinding? RollingKey = null, KeyBinding? ReplayKey = null, string? LastClip = null, string ClipFocus = "Natural", bool MonitorClips = false);
+    KeyBinding? RollingKey = null, KeyBinding? ReplayKey = null, string? LastClip = null, string ClipFocus = "Natural", bool MonitorClips = false, Dictionary<string, JsonElement>? VoiceParameters = null, Dictionary<string, Dictionary<string, JsonElement>>? CustomVoices = null);
 public sealed record AudioClip(float[] Samples, int SampleRate)
 {
     public double Seconds => Samples.Length / (double)SampleRate;
@@ -30,6 +30,8 @@ public sealed class EntertainmentState
 {
     public volatile float Master = .7f;
     public volatile string VoicePreset = "Off";
+    public volatile string? VoiceParameters;
+    public volatile string? VoiceError;
 }
 
 // Bounded ring keyed to elapsed time. Silent gaps occupy real timeline space.
@@ -201,30 +203,6 @@ public sealed class SoundLibrary
     }
 }
 
-public sealed class VoiceEffects
-{
-    SmbPitchShifter shifter = new();
-    string preset = "Off";
-    float fade = 1;
-    public static float Factor(string name) => name switch
-    {
-        "Low & smooth" => (float)Math.Pow(2, -2.0 / 12),
-        "Bright" => (float)Math.Pow(2, 2.0 / 12),
-        "Storyteller" => (float)Math.Pow(2, -1.0 / 12), _ => 1
-    };
-    public void Process(float[] samples, int count, int rate, string name)
-    {
-        bool switching = preset != name;
-        float factor = Factor(preset);
-        if (factor != 1) shifter.PitchShift(factor, count, 2048, 8, rate, samples);
-        for (int i = 0; i < count; i++)
-        {
-            fade = switching ? Math.Max(0, fade - 1f / (rate * .01f)) : Math.Min(1, fade + 1f / (rate * .06f));
-            samples[i] *= fade;
-        }
-        if (switching && fade == 0) { preset = name; shifter = new SmbPitchShifter(); }
-    }
-}
 public sealed class PeakGuard
 {
     readonly float[] delay, peaks;
@@ -268,7 +246,7 @@ public sealed class ProtectedPreview(ISampleProvider source) : ISampleProvider
         return n;
     }
 }
-public sealed class SessionMixer : ISampleProvider
+public sealed class SessionMixer : ISampleProvider, IDisposable
 {
     sealed class Playing(AudioClip clip, float gain, string? group)
     {
@@ -300,13 +278,15 @@ public sealed class SessionMixer : ISampleProvider
             playing.Add(new Playing(clip, gain, group));
         }
     }
+    public void Dispose() => effects.Dispose();
     public void StopAll() { lock (sync) foreach (var p in playing) p.StopRemaining = Math.Max(1, WaveFormat.SampleRate / 100); }
     public int Read(float[] buffer, int offset, int count)
     {
         int frames = count / WaveFormat.Channels;
         if (mono.Length < frames) mono = new float[frames];
         int read = mic.Read(mono, 0, frames); Array.Clear(mono, read, frames - read);
-        effects.Process(mono, frames, WaveFormat.SampleRate, mic is VoiceBuffer b && b.Settings.Bypass ? "Off" : state.VoicePreset);
+        effects.Process(mono, frames, WaveFormat.SampleRate, mic is VoiceBuffer b && b.Settings.Bypass ? "Off" : state.VoicePreset, state.VoiceParameters);
+        state.VoiceError = effects.Error;
         float peak = 0;
         lock (sync)
         {
@@ -387,5 +367,3 @@ public sealed class SilentInput(int rate) : ISampleProvider
     public WaveFormat WaveFormat { get; } = WaveFormat.CreateIeeeFloatWaveFormat(rate, 1);
     public int Read(float[] buffer, int offset, int count) { Array.Clear(buffer, offset, count); return count; }
 }
-
-

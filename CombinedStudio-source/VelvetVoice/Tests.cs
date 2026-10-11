@@ -22,7 +22,7 @@ static class Tests
         using var capture = new WasapiCapture(input, true, 20);
         var f = output.AudioClient.MixFormat;
         var stream = new VoiceBuffer(capture.WaveFormat.SampleRate, f.SampleRate, 1, 40);
-        var state = new EntertainmentState { VoicePreset = "Low & smooth" };
+        var state = new EntertainmentState { VoicePreset = "Deep" };
         var mixer = new SessionMixer(stream, f.Channels, state);
         mixer.Play(new AudioClip(Enumerable.Repeat(.01f, f.SampleRate).ToArray(), f.SampleRate), .5f);
         long packets = 0, bytes = 0; Exception? fault = null;
@@ -134,4 +134,3 @@ static class Tests
         File.WriteAllLines(Path.Combine(AppContext.BaseDirectory, "test-results.txt"), log);
     }
 }
-

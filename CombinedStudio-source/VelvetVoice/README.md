@@ -1,4 +1,4 @@
-# Velvet Voice
+# Velvet Audio
 
 A Windows microphone processor for SM7B → Elgato Wave Link → standard VoiceMeeter B1 → game chat.
 
@@ -6,7 +6,7 @@ A Windows microphone processor for SM7B → Elgato Wave Link → standard VoiceM
 
 This is the **WPF + Python edition (1.5)**, with the same warm dark/copper style as FramePilot. Extract the complete portable ZIP into a new folder, close your old copy, and run **VelvetVoice.exe**. Keep `rnnoise.dll`, `silero_vad.onnx`, and the complete `python` folder beside it. No installer or driver is included in this edition.
 
-The build is self-contained for **Windows 10/11 x64**. Recipients do not need to install .NET or Python. The WPF interface controls the existing C# real-time audio engine; saved-clip cleanup runs locally through the bundled Python/RNNoise worker, followed by Silero for Voices only. Keep the app running while using voice chat. Audio processing and rolling capture never autostart. Existing voice settings, pads, shortcuts, and audio files are reused from your Windows account. See **WPF-PYTHON-HANDOFF.md** for build instructions and architecture.
+The build is self-contained for **Windows 10/11 x64**. Recipients do not need to install .NET or Python. The WPF interface controls the existing C# real-time audio engine; saved-clip cleanup runs locally through the bundled Python/RNNoise worker, followed by Silero for Voices only. Keep the app running while using voice chat. Audio processing starts automatically when the app opens. Rolling capture starts only when requested. Existing voice settings, pads, shortcuts, and audio files are reused from your Windows account. See **WPF-PYTHON-HANDOFF.md** for build instructions and architecture.
 
 VoiceMeeter and VB-CABLE are separate vendor drivers, not bundled or installed by setup. Recipients can select any active Windows microphone in this app, including their interface directly. For in-game use, select CABLE Input as the processed output and CABLE Output as the game's microphone. Your SM7B presets are starting points; other microphones may need different EQ.
 
@@ -22,7 +22,7 @@ Rolling capture starts only when you click Start rolling. Its current history li
 
 **Assign shortcut** captures a key combination for the selected pad. The three buttons below the clip controls let you separately bind **Start/stop rolling**, **Save clip**, and **Replay last clip**. Both the rolling button and its shortcut toggle capture on each press: start, stop, start, stop. The button reads Start rolling when stopped and Stop rolling when running. Stopping clears unsaved rolling history; saved clips remain available. Existing Start rolling bindings now toggle without needing to reassign the key. Save clip saves the previous slider-selected duration. Replay immediately replaces the previous replay in the mix and starts the last saved clip at its beginning, allowing rapid repeated presses without stacking copies. Other soundboard sounds and your live microphone continue. The saved last-clip reference and all shortcuts persist after restarting. Existing audio already sent to a driver/game buffer cannot be withdrawn, so audible retrigger timing still depends on your selected buffer/device latency. Stop shortcut stops soundboard sounds.
 
-Shortcuts observe assigned key states without reserving or swallowing the keys: your game and other apps can receive the same press. Duplicate assignments within Velvet Voice are rejected. Holding a key does not repeat; release and press again to retrigger. Extra modifiers prevent a bare-key binding from firing. Actions pause while Velvet Voice has a modal dialog open. Windows privilege restrictions may prevent detection in an elevated game, and very brief presses during a busy UI may be missed. No keyboard hooks or typed-text logging are used. Plain comma/period/slash bindings also trigger while typing those characters elsewhere; use a modifier combination to avoid that.
+Shortcuts observe assigned key states without reserving or swallowing the keys: your game and other apps can receive the same press. Duplicate assignments within Velvet Audio are rejected. Holding a key does not repeat; release and press again to retrigger. Extra modifiers prevent a bare-key binding from firing. Actions pause while Velvet Audio has a modal dialog open. Windows privilege restrictions may prevent detection in an elevated game, and very brief presses during a busy UI may be missed. No keyboard hooks or typed-text logging are used. Plain comma/period/slash bindings also trigger while typing those characters elsewhere; use a modifier combination to avoid that.
 
 ## Trim a pad
 
@@ -40,14 +40,16 @@ This is speech-focused noise reduction, not guaranteed voice extraction. Game so
 
 ## Voice changer
 
-The **Voice changer** tab offers Off, Low & smooth (−2 semitones), Bright (+2), and Storyteller (−1). Studio processing still applies first. These modest pitch shifts keep words and timing intact, with short fades when changing presets. They are signal effects, not AI voice cloning or an identity transformation. Pitch changing can introduce voice-dependent metallic artifacts and adds roughly 37 ms of processing latency at 48 kHz; Off adds no pitch processing delay. Use Off for the cleanest natural voice. NAudio's managed pitch-shifting documentation describes the same inherent artifact tradeoff: https://github.com/naudio/NAudio/blob/main/Docs/SmbPitchShiftingSampleProvider.md .
+The **Voice changer** tab uses VoxShift's 46 DSP presets, independent pitch/formant processing, EQ, distortion, bitcrusher, ring modulation, tremolo, vibrato, echo and reverb. Select a category/preset, enable and tune effects, then save a custom preset. Off bypasses the voice changer. Only the live microphone is affected; soundboard clips retain their sound. Studio processing still runs upstream. The optional VoxShift gate defaults to off. These are DSP characters, not AI voice cloning.
+
+A persistent buffer-only Python worker runs outside the audio callback using bundled NumPy 2.2.6 and SciPy 1.15.3. No installation or network is needed. Worker buffering targets 40 ms plus roughly 21–23 ms pitch delay, alongside device and Studio buffering. Preset changes reset effect tails and briefly refill the queue. Failure/overload bypasses effects and displays a status; restart Studio to retry. Microphone selection and WASAPI routing remain managed by the existing app.
 
 ## Your routing: standard VoiceMeeter + Wave Link
 
 1. In Wave Link, send your SM7B to the microphone effects output. Disable its effects initially, especially gates, suppression, compressors and automatic gain. Set interface gain while speaking normally so peaks reach about −18 to −10 dBFS; loud speech must remain below 0 dBFS. Avoid adding gain to already clipped audio. Your detected hardware endpoint is **Microphone (Elgato Wave XLR)**; if Wave Link's MicrophoneFX endpoint is unavailable, use that raw Wave XLR endpoint as VoiceMeeter's hardware input.
 2. In VoiceMeeter's hardware input, select the **Wave Link MicrophoneFX** recording device (its name may vary by version). Enable **B** on that microphone strip; standard VoiceMeeter's B bus is B1. Keep the mic strip's gate and compressor at zero. Send only the microphone to B: disable B on desktop/game audio and other input strips. Prefer the MicrophoneFX source to a stream mix containing game audio.
 3. Install **VB-CABLE** if absent: https://vb-audio.com/Cable/ . This is a separate signed virtual audio driver from VB-Audio, not bundled with this app. Follow the vendor's installation/reboot instructions. A user-mode app alone cannot create a system-wide Windows microphone device.
-4. In Velvet Voice choose **Voicemeeter Out B1** (older name: **Voicemeeter Output**) as microphone input. Choose **CABLE Input (VB-Audio Virtual Cable)** as processed output. The cable names are intentionally reversed: the app plays into CABLE Input, while games record from CABLE Output.
+4. In Velvet Audio choose **Voicemeeter Out B1** (older name: **Voicemeeter Output**) as microphone input. Choose **CABLE Input (VB-Audio Virtual Cable)** as processed output. The cable names are intentionally reversed: the app plays into CABLE Input, while games record from CABLE Output.
 5. Click **Start processing**. In the game/Discord choose **CABLE Output** as the microphone and your normal headphones as the listening output. Disable its suppression, automatic gain and voice threshold if available; use continuous voice activation or push-to-talk. An app cannot override a game's own gate or voice codec.
 6. Do not feed CABLE Output into the B1 input, and do not enable Windows "Listen to this device" on B1/cable. Both can create a feedback loop. Keep headphones on if testing a hardware speaker output.
 
@@ -83,7 +85,7 @@ Capture B1 in this app and output to **Voicemeeter AUX Input**. Route only that 
 
 ## Files and development
 
-Earlier installers used `%LOCALAPPDATA%\Programs\VelvetVoice`; this portable edition runs from its extracted folder. The portable desktop build contains a self-contained executable, rnnoise.dll and guide. Studio settings are saved under `%LOCALAPPDATA%\VelvetVoice\settings.json`; soundboard settings are in board.json. Device selection and parameters persist; live processing and rolling capture never autostart. Audio clips are stored only when you request Save clip. No network access, cloud processing or telemetry is implemented. Native runtime files may be extracted to the user's temporary .NET bundle cache on first launch.
+Earlier installers used `%LOCALAPPDATA%\Programs\VelvetVoice`; this portable edition runs from its extracted folder. The portable desktop build contains a self-contained executable, rnnoise.dll and guide. Studio settings are saved under `%LOCALAPPDATA%\VelvetVoice\settings.json`; soundboard settings are in board.json. Device selection and parameters persist; live processing starts automatically when the app opens; rolling capture starts only when requested. Audio clips are stored only when you request Save clip. No network access, cloud processing or telemetry is implemented. Native runtime files may be extracted to the user's temporary .NET bundle cache on first launch.
 
 Source: Wpf/ (shell, controls and dialogs), Program.cs (shared audio lifecycle/editor state), Dsp.cs (signal chain/rate buffer), PythonSpeech.cs + python/speech_worker.py (saved-clip cleanup), Tests.cs (offline checks). Build with a .NET 8 SDK:
 
@@ -102,3 +104,5 @@ NAudio 2.2.1 is used under its MIT license and RNNoise v0.2 under its BSD licens
 
 
 
+
+Windows startup: use **Start with Windows** in the shared sidebar to run this portable executable at sign-in. Keep the full portable folder at the same path. On normal launch, saved microphone processing, headphone EQ, and FramePilot live monitoring start automatically. Missing devices or unavailable Equalizer APO are reported in their audio pages; configure devices there and use the start button to retry. Isolated test/preview sessions keep audio inactive.

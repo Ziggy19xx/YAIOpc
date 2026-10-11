@@ -57,7 +57,7 @@ namespace FramePilot {
    var updates=pages["Updates & notes"] as FlowLayoutPanel;
    if(updates!=null){
     foreach(Control child in updates.Controls){
-     var label=child as Label;if(label!=null&&label.Text.StartsWith("One portable"))label.Text="Combined WPF edition: keep FramePilot.exe, monitor and models together.\r\nExtract a complete release into a new folder to update. Local preferences remain shared.";
+     var label=child as Label;if(label!=null&&label.Text.StartsWith("One portable"))label.Text="Combined WPF edition: keep YAIOpc.exe, monitor and models together.\r\nExtract a complete release into a new folder to update. Local preferences remain shared.";
      foreach(Control control in child.Controls){var button=control as Button;if(button!=null&&(button.Text=="Create desktop EXE"||button.Text=="Install local update"||button.Text=="Restore previous app EXE")){button.Enabled=false;button.Text+=" (EXE-only edition)";}}
     }
     var distribution=Row();distribution.Controls.Add(Button("Open application folder",delegate{Open(AppDomain.CurrentDomain.BaseDirectory);}));updates.Controls.Add(distribution);
@@ -82,6 +82,3 @@ namespace FramePilot {
   public void WpfApplySelection() { ApplyCatalogSelection();RefreshDashboardCounts();NotifyWpf(); }
  }
 }
-
-
-

@@ -54,14 +54,18 @@ static class FeatureTests
             Assert(Math.Abs(replayOutput[^1] - .15f) < .0001, "Replay stacked audio, failed to restart, or stopped unrelated sound/mic");
         }
         log.Add("PASS 100 rapid replay presses: old replay removed, clip restarts at beginning; other sounds and mic preserved");
-        foreach (string name in new[] { "Low & smooth", "Bright", "Storyteller" })
+        foreach (string name in new[] { "Deep", "Woman", "Announcer" })
         {
-            var effects = new VoiceEffects(); var block = new float[480];
+            using var effects = new VoiceEffects(); var block = new float[480];
+            effects.Process(block, block.Length, 48000, name);
+            Assert(SpinWait.SpinUntil(() => effects.IsReady || effects.Error != null, 15000) && effects.Error == null, "VoxShift startup failed: " + effects.Error);
             int crossings = 0; float previous = 0;
             for (int chunk = 0; chunk < 200; chunk++)
             {
                 for (int i = 0; i < block.Length; i++) block[i] = (float)(.03 * Math.Sin(2 * Math.PI * 440 * (chunk * 480 + i) / 48000));
                 effects.Process(block, block.Length, 48000, name);
+                Thread.Sleep(10);
+                Assert(effects.Error == null, effects.Error ?? "VoxShift worker failed");
                 foreach (float value in block)
                 {
                     Assert(float.IsFinite(value) && Math.Abs(value) < .2, "Pitch preset unstable");
@@ -88,6 +92,10 @@ static class FeatureTests
         var restoredConfig = System.Text.Json.JsonSerializer.Deserialize<BoardConfig>(serialized);
         Assert(restoredConfig?.Sounds[0].Binding?.Key == (int)Keys.F1 && restoredConfig.Sounds[0].Binding?.Modifiers == 3, "Soundboard persistence failed");
         Assert(restoredConfig != null && restoredConfig.RollingKey?.Key == (int)Keys.F2 && restoredConfig.ClipKey?.Key == (int)Keys.F3 && restoredConfig.ReplayKey?.Key == (int)Keys.F4 && restoredConfig.LastClip == entry.Id, "Replay/rolling shortcuts or last clip not persisted");
+        var voiceConfig = new BoardConfig(new(), VoicePreset: "My voice", VoiceParameters: VoxPresets.For("Woman"), CustomVoices: new() { ["My voice"] = VoxPresets.For("Robot") });
+        var voiceRestored = System.Text.Json.JsonSerializer.Deserialize<BoardConfig>(System.Text.Json.JsonSerializer.Serialize(voiceConfig));
+        Assert(voiceRestored!.VoiceParameters!["pitch"].GetDouble() == 7 && voiceRestored.CustomVoices!["My voice"]["ring_enabled"].GetBoolean(), "VoxShift custom preset persistence");
+        log.Add("PASS VoxShift parameters and custom presets serialize and restore");
         log.Add("PASS real MP3/WAV decode, 44.1→48 kHz import, lossless saved clip, persisted shortcuts");
         using (var a = new Form()) using (var b = new Form())
         using (var first = new GlobalKeys(a.Handle)) using (var second = new GlobalKeys(b.Handle))
@@ -120,7 +128,7 @@ static class FeatureTests
             pressed.Clear(); first.Poll(pressed.Contains);
             pressed.Add((int)Keys.Oemcomma); first.Poll(pressed.Contains);
             Assert(triggered == 102, "Plain key did not activate after dialog/release");
-            Assert(RegisterHotKey(b.Handle, 900, 0x4000, (uint)Keys.Oemcomma), "Velvet Voice reserved comma from Windows");
+            Assert(RegisterHotKey(b.Handle, 900, 0x4000, (uint)Keys.Oemcomma), "Velvet Audio reserved comma from Windows");
             try { Assert(first.Bind(3, new KeyBinding((int)Keys.Oemcomma, 0), () => { }), "Observer failed while another app owns hotkey"); }
             finally { UnregisterHotKey(b.Handle, 900); }
             Assert(first.Bind(1, null, () => { }), "Unbind failed");
@@ -130,5 +138,3 @@ static class FeatureTests
         SpeechFocusTests.Run(log, root);
     }
 }
-
-

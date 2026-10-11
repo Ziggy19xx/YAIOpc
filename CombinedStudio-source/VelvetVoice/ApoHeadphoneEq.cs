@@ -26,7 +26,7 @@ internal sealed class ApoHeadphoneEq : IDisposable
     }
     internal static string Filters(EqParameters settings)
     {
-        var text=new StringBuilder("# Original Velvet Voice listening curve\nChannel: all\n");
+        var text=new StringBuilder("# Original Velvet Audio listening curve\nChannel: all\n");
         if(settings.Bypass)return text.Append("# Tone shaping bypassed\n").ToString();
         // APO applies filters in the existing system path; retain 1 dB of conservative headroom.
         float safePreamp=Math.Min(-1,HeadphoneEqProvider.Headroom(settings)-1);
@@ -42,18 +42,18 @@ internal sealed class ApoHeadphoneEq : IDisposable
         string original=File.Exists(main)?File.ReadAllText(main):"";
         if(original!=Managed){
             // Refuse partial/damaged managed roots rather than backing them up recursively.
-            if(original.Contains(Marker,StringComparison.Ordinal))throw new InvalidOperationException("The Velvet Voice audio configuration changed. Restore its backup before enabling EQ again.");
+            if(original.Contains(Marker,StringComparison.Ordinal))throw new InvalidOperationException("The Velvet Audio audio configuration changed. Restore its backup before enabling EQ again.");
             File.WriteAllText(backup,original);
         }else if(!File.Exists(backup))throw new InvalidOperationException("The previous audio configuration backup is missing. Open Equalizer APO Configuration Editor to repair it.");
         File.WriteAllText(Path.Combine(folder!,"velvet-voice-eq.txt"),Filters(settings));
-        File.WriteAllText(Path.Combine(folder!,"velvet-voice-route.txt"),$"# Only the selected headphone endpoint uses Velvet Voice. Other devices retain their previous configuration.\nIf: tolower(deviceGuid) == \"{guid}\"\nInclude: velvet-voice-eq.txt\nElse:\nInclude: velvet-voice-before.txt\nEndIf:\n");
+        File.WriteAllText(Path.Combine(folder!,"velvet-voice-route.txt"),$"# Only the selected headphone endpoint uses Velvet Audio. Other devices retain their previous configuration.\nIf: tolower(deviceGuid) == \"{guid}\"\nInclude: velvet-voice-eq.txt\nElse:\nInclude: velvet-voice-before.txt\nEndIf:\n");
         File.WriteAllText(main,Managed);Running=true;Status="Direct headphone EQ enabled · Equalizer APO";
     }
     internal void Update(EqParameters settings)
     {
         if(!Running)return;
         string main=Path.Combine(folder!,"config.txt");
-        if(!File.Exists(main)||File.ReadAllText(main)!=Managed){Running=false;Status="Another equalizer changed the audio configuration. Enable Velvet Voice EQ again to take control.";throw new InvalidOperationException(Status);}
+        if(!File.Exists(main)||File.ReadAllText(main)!=Managed){Running=false;Status="Another equalizer changed the audio configuration. Enable Velvet Audio EQ again to take control.";throw new InvalidOperationException(Status);}
         File.WriteAllText(Path.Combine(folder!,"velvet-voice-eq.txt"),Filters(settings));
     }
     internal void Stop()

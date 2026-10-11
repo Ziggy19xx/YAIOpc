@@ -1,3 +1,77 @@
+# Latest update � automatic startup (October 10, 2026)
+
+Normal launches now start saved microphone processing, headphone EQ, and live monitoring. The shared sidebar has Start with Windows (current-user Run key). Isolated test/preview sessions do not autostart audio. Latest portable folder: outputs/FramePilot-VelvetAudio-Autostart. This update supersedes prior statements below that audio never autostarts. Advanced EQ routing mode is now persisted. Legacy installer shortcuts are removed only when their target belongs to this app. Windows startup has been enabled and verified for the new folder. Build, 71 UI checks, and 55 offline audio groups passed. Live hardware listening was not verified.
+
+# FramePilot + Velvet Audio — current continuation handoff
+
+Updated: October 10, 2026 (America/Chicago)
+Workspace: `C:\Users\Ziggy\Documents\ChatGPT\performance app 2`
+
+## Current state — authoritative
+
+The latest user request was to replace the two sidebars with **one shared sidebar**, with **FramePilot** and **Velvet Audio** as expandable main options and **More tools** expandable underneath both. This is implemented, built, and verified. The earlier two-rail/collapse design below is historical and is superseded.
+
+The sidebar is 276 pixels wide and stays fixed while switching workspaces. FramePilot starts expanded; Velvet Audio and More tools start collapsed. Both application sections expand/collapse independently. Expanding an app restores its selected page. More tools contains secondary FramePilot pages and opens automatically when one is selected. Only the active app/page is highlighted. At smaller heights the sidebar scrolls. The shared window supports widths down to 1060 pixels.
+
+Velvet Voice has been renamed **Velvet Audio** in visible titles, sidebar, dialogs, instructions, and user-facing messages. Internal `VelvetVoice` namespaces, LocalAppData directories, configuration paths, and APO ownership markers/file names remain unchanged for compatibility.
+
+## Latest runnable build and checks
+
+- Maintained project: `CombinedStudio-source\CombinedStudio.csproj`.
+- Latest complete portable folder: `outputs\FramePilot-VelvetAudio-Unified`.
+- Run: `outputs\FramePilot-VelvetAudio-Unified\FramePilot.exe` after closing the existing app. Keep the entire folder together.
+- Shared UI suite: exit 0, **71 passing checks** (unified groups, routes, single selection, EQ bindings, retained page/settings, synthetic audio continuity, dialogs, 1060/1280/1600 pixel layouts).
+- Offline audio suite: exit 0, **55 passing groups**, including direct APO fixtures and independent headphone DSP tests.
+- UI report/screenshots: `outputs\Unified-sidebar-validation`.
+- Audio report: `outputs\FramePilot-VelvetAudio-Unified\test-results.txt`.
+- Latest validation notes: `CombinedStudio-source\SIDEBAR-VALIDATION.md`.
+- Build succeeds with the existing SteamArtwork obsolete API warning.
+- Live microphone/headphone listening was not tested; tests use isolated settings and temporary APO files. The actual Equalizer APO config was verified to remain `Include: peace.txt` during development.
+
+The system dotnet has no SDK. Use the existing private SDK:
+
+```powershell
+& .\CombinedStudio-source\Build.ps1 -DotNet 'C:\Users\Ziggy\Documents\Codex\2026-10-03\hello-hello-can-you-hear-me\work\dotnet\dotnet.exe' -OutputDirectory 'C:\Users\Ziggy\Documents\ChatGPT\performance app 2\outputs\FramePilot-VelvetAudio-Unified'
+```
+
+Run `FramePilot.exe --combined-smoke <absolute-report-directory>` or `FramePilot.exe --voice-test`. In PowerShell, use `Start-Process -WindowStyle Hidden -Wait -PassThru` for these WinExe tests so completion/exit codes are actually observed. Existing registry and temporary hotkey checks require execution outside the restricted sandbox. Do not stop the user's running app to update locked binaries; publish to a separate complete folder.
+
+## GitHub status — important
+
+Remote: `https://github.com/Ziggy19xx/YAIOpc.git`, branch `main`.
+
+Last committed and pushed change: **b759ac7f3a2437933e50656c8fef7217c2d190ed**, `Add headphone EQ with direct Equalizer APO integration`.
+
+**The rename and all sidebar changes are currently local, uncommitted, and unpushed.** The user asked whether they had been pushed and was told no. The latest request is only a handoff; do not assume it authorizes a new GitHub push. Inspect `git status` before staging if a later user asks to push.
+
+The last checked GitHub build for the EQ commit succeeded: https://github.com/Ziggy19xx/YAIOpc/actions/runs/38066435443 . `.github/workflows/windows-build.yml` builds on pushes/PRs/manual dispatch with .NET 8 on Windows, then uploads `FramePilot-VelvetVoice-win-x64` for 14 days. It does not run tests or publish releases. Build/output/artifact names still use older technical names in some places; do not confuse that GitHub artifact with the newer unpushed local build. Existing ZIPs are older and have not been repackaged for the unified sidebar.
+
+## Main implementation locations
+
+- `Host/Shell.cs`: composes one window and one sidebar. Detaches the original rails, moves existing navigation controls into FramePilot/Velvet Audio expanders, and reuses the original More tools expander below them. The old detached namescopes are retained for the feature models' control lookup. Header foreground marks the active app. Clearing inactive navigation also resets FramePilot glyph colors.
+- `FramePilot/wpf/Program.cs`: exposes existing primary/navigation controls and More tools menu, auto-expands More tools for secondary pages, and clears navigation selection for app switching.
+- `FramePilot/wpf/MainWindow.xaml`: chevron expander template reused by shared application groups; foreground and accessible labels propagate correctly.
+- `VelvetVoice/Wpf/StudioWindow.cs`: exposes audio navigation controls; contains Headphone EQ page and renamed visible UI.
+- `VelvetVoice/Wpf/Shell.xaml`, `UiControls.cs`, `Program.cs`, `Host/Program.cs`: branding updates, with existing settings and internal identity preserved.
+
+## Headphone EQ already implemented
+
+The user wanted an original headphone EQ with presets and then requested a simple single-device setup like Peace. Equalizer APO is already installed at `C:\Program Files\EqualizerAPO`; its config folder permits normal user writes outside the sandbox.
+
+Normal listening: select **Speakers (Realtek)** (the user's headphones) and **Enable headphone EQ**, while keeping Windows/games on that same output. There is no playback-source dropdown in normal mode. `ApoHeadphoneEq.cs` writes original ten-band peaking filters to the existing APO engine, uses exact endpoint GUID matching, reserves conservative headroom, backs up the old config, retains the previous configuration on other devices, and restores the backup on disable/close only if the root is still owned. It detects outside changes instead of overwriting another controller's config. Keep the original ownership marker and `velvet-voice-*.txt` filenames for compatibility. Direct APO mode has no live peak limiter and depends on APO being enabled on the endpoint, Windows enhancements, and shared-mode playback. Audio device setup opens the installed APO device selector. Do not copy Peace source/presets.
+
+Advanced routing is optional and retains the independent stereo C#/NAudio engine: separate playback source to headphones, smooth band/gain/bypass transitions, resampling, feedback prevention, and linked −1 dBFS limiter. Do not use the same source and output or reuse the microphone's output cable.
+
+EQ implementation: `VelvetVoice/HeadphoneEq.cs`, `ApoHeadphoneEq.cs`, `HeadphoneEqTests.cs`, `Wpf/HeadphoneEqPage.cs`. Ten bands, seven original factory presets, custom saved presets, response curve, preamp, bypass, and device preferences. Local preferences stay in `VelvetVoice/headphone-eq.json`.
+
+## Continuation guidance
+
+All requested implementation work is complete. The user asked for a handoff, not additional changes. Carry forward the current source and complete portable build above. If asked to push, review/stage the local rename/sidebar/documentation changes, commit, and push normally without force. Do not create a new chat or task unless explicitly requested. The historical notes below describe older architecture and deliverables; the current section above wins wherever they conflict.
+
+---
+
+# Historical handoff — prior to EQ and shared-sidebar work
+
 # FramePilot + Velvet Voice — continuation handoff
 
 Updated: 2026-10-10

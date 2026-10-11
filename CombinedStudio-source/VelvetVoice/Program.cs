@@ -74,7 +74,7 @@ public sealed partial class MainForm : Form
     public MainForm(string? isolatedDataRoot = null)
     {
         if(isolatedDataRoot != null) configPath = Path.Combine(isolatedDataRoot,"settings.json");
-        Text = "Velvet Voice • SM7B studio processor"; Size = new Size(940, 910);
+        Text = "Velvet Audio • SM7B studio processor"; Size = new Size(940, 910);
         Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
         MinimumSize = new Size(820, 810); BackColor = Color.FromArgb(16, 23, 32); ForeColor = ink;
         Font = new Font("Segoe UI", 10); StartPosition = FormStartPosition.CenterScreen;
@@ -140,7 +140,7 @@ public sealed partial class MainForm : Form
         actions.Controls.AddRange(new Control[] { start, bypass, guide }); page.Controls.Add(actions);
         meters.Dock = DockStyle.Fill; meters.Font = new Font("Consolas", 10); meters.Text = "INPUT  — dBFS     OUTPUT  — dBFS     REDUCTION  — dB\nQueue — ms · underruns 0 · overruns 0"; page.Controls.Add(meters);
         route.Dock = DockStyle.Fill; route.ForeColor = Color.FromArgb(148, 197, 192);
-        route.Text = "SM7B → Wave Link → VoiceMeeter B1 → Velvet Voice → CABLE Input\nIn your game, select CABLE Output as the microphone.\nKeep gates, suppression and automatic gain off upstream and in the game."; page.Controls.Add(route);
+        route.Text = "SM7B → Wave Link → VoiceMeeter B1 → Velvet Audio → CABLE Input\nIn your game, select CABLE Output as the microphone.\nKeep gates, suppression and automatic gain off upstream and in the game."; page.Controls.Add(route);
         status.Dock = DockStyle.Fill; status.Text = "Ready • no gate / no noise suppression • peak ceiling −1 dBFS"; page.Controls.Add(status);
         presets.SelectedIndexChanged += (_, _) => ApplyPreset(); presets.SelectedIndex = 0;
         outputs.SelectedIndexChanged += (_, _) => UpdateRoute();
@@ -220,7 +220,7 @@ public sealed partial class MainForm : Form
     {
         string name = (outputs.SelectedItem as DeviceChoice)?.Name ?? "Choose an output device";
         route.Text = name.Contains("CABLE Input", StringComparison.OrdinalIgnoreCase)
-            ? "SM7B → Wave Link → VoiceMeeter B1 → Velvet Voice → CABLE Input\nGame microphone: CABLE Output. Do not return that cable to B1.\nDisable gates / suppression / automatic gain upstream and in the game."
+            ? "SM7B → Wave Link → VoiceMeeter B1 → Velvet Audio → CABLE Input\nGame microphone: CABLE Output. Do not return that cable to B1.\nDisable gates / suppression / automatic gain upstream and in the game."
             : "Output: " + name + "\nFor standard VoiceMeeter, use CABLE Input; games select CABLE Output.\nHardware outputs are for monitoring. See the guide for B2 routing.";
     }
     void StartAudio()
@@ -264,7 +264,7 @@ public sealed partial class MainForm : Form
         try { c?.StopRecording(); } catch { }
         try { p?.Stop(); } catch { }
         c?.Dispose(); p?.Dispose(); inputDevice?.Dispose(); outputDevice?.Dispose();
-        inputDevice = outputDevice = null; stream = null; mixer = null;
+        inputDevice = outputDevice = null; stream = null; mixer?.Dispose(); mixer = null;
         inputs.Enabled = outputs.Enabled = channel.Enabled = latency.Enabled = true;
         start.Text = "Start processing"; status.Text = "Stopped • settings retained"; stopping = false;
     }
@@ -294,6 +294,3 @@ public sealed partial class MainForm : Form
         catch { status.Text = "Saved settings unavailable; using defaults."; }
     }
 }
-
-
-

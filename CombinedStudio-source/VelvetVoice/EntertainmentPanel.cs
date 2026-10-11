@@ -147,20 +147,39 @@ public sealed partial class EntertainmentPanel : UserControl
         }
         catch (Exception ex) { SetStatus("Device enumeration: " + ex.Message); }
     }
+    readonly ComboBox voiceEffect = new() { Width = 420, Name = "voiceEffect" };
+    Dictionary<string, JsonElement> voiceParameters = VoxPresets.For("Normal");
+    Dictionary<string, Dictionary<string, JsonElement>> customVoices = new();
+    internal IReadOnlyDictionary<string, JsonElement> VoiceParameters => voiceParameters;
+    internal IEnumerable<string> VoiceNames => new[] { "Off" }.Concat(VoxPresets.Builtin.Keys).Concat(customVoices.Keys);
+    internal string VoiceCategory(string name) => VoxPresets.Builtin.TryGetValue(name, out var p) ? p.Category : name == "Off" ? "Bypass" : "Custom";
+    internal void SetVoiceParameter(string key, object value)
+    {
+        var next = new Dictionary<string, JsonElement>(voiceParameters) { [key] = JsonSerializer.SerializeToElement(value) };
+        voiceParameters = VoxPresets.Sanitize(next);
+        State.VoiceParameters = JsonSerializer.Serialize(voiceParameters); SaveBoard();
+    }
+    internal void SaveCustomVoice(string name)
+    {
+        name = name.Trim();
+        if (name.Length == 0 || name.Length > 60 || name == "Off" || VoxPresets.Builtin.ContainsKey(name)) throw new ArgumentException("Use a new name of 1–60 characters.");
+        if (!customVoices.ContainsKey(name) && customVoices.Count >= 32) throw new ArgumentException("You can save up to 32 custom voices.");
+        customVoices[name] = new(voiceParameters);
+        if (!voiceEffect.Items.Contains(name)) voiceEffect.Items.Add(name);
+        voiceEffect.SelectedItem = name; SaveBoard();
+    }
     public Control CreateVoicePage()
     {
-        var page = new FlowLayoutPanel { Dock = DockStyle.Fill, Padding = new Padding(32), FlowDirection = FlowDirection.TopDown, WrapContents = false, BackColor = BackColor, ForeColor = ink };
-        page.Controls.Add(new Label { Text = "VOICE PLAYGROUND", Font = new Font("Segoe UI", 19, FontStyle.Bold), Width = 760, Height = 52 });
-        page.Controls.Add(new Label { Text = "Small pitch shifts for clean character changes. Your Studio EQ still applies.", Width = 760, Height = 45 });
-        var effect = new ComboBox { Width = 420, Name = "voiceEffect" }; StyleCombo(effect); effect.Items.AddRange(new object[] { "Off", "Low & smooth", "Bright", "Storyteller" }); effect.SelectedIndex = 0;
-        effect.SelectedIndexChanged += (_, _) => { State.VoicePreset = effect.SelectedItem?.ToString() ?? "Off"; SaveBoard(); };
-        page.Controls.Add(effect);
-        page.Controls.Add(new Label { Text = "Low & smooth   −2 semitones, a deeper character\n\nBright                 +2 semitones, a lighter character\n\nStoryteller           −1 semitone, a subtle lower register\n\nOff                     Your original processed voice, no pitch shift", Width = 760, Height = 225, Padding = new Padding(0, 24, 0, 0) });
-        page.Controls.Add(Button("Reset to original", 190, (_, _) => effect.SelectedIndex = 0));
-        page.Controls.Add(new Label { Text = "Voice effects change only the live mic. Soundboard clips keep their original pitch.\n\nPitch processing adds roughly 37 ms at 48 kHz. Some voice-dependent artifacts\nare possible; these modest presets avoid extreme robot-style transformations.\n\nStart processing in Studio to use effects. Soundboard Stop stops sounds, not your mic.", Width = 760, Height = 180, Padding = new Padding(0, 25, 0, 0), ForeColor = Color.FromArgb(148, 197, 192) });
-        return page;
+        var page = new FlowLayoutPanel { Dock = DockStyle.Fill, FlowDirection = FlowDirection.TopDown };
+        StyleCombo(voiceEffect); voiceEffect.Items.AddRange(VoiceNames.Cast<object>().ToArray()); voiceEffect.SelectedIndex = 0;
+        voiceEffect.SelectedIndexChanged += (_, _) => {
+            State.VoicePreset = voiceEffect.SelectedItem?.ToString() ?? "Off";
+            voiceParameters = customVoices.TryGetValue(State.VoicePreset, out var saved) ? new(saved) : VoxPresets.For(State.VoicePreset);
+            State.VoiceParameters = JsonSerializer.Serialize(voiceParameters); SaveBoard();
+        };
+        page.Controls.Add(voiceEffect); return page;
     }
-    ComboBox? EffectCombo => host.Controls.Find("voiceEffect", true).FirstOrDefault() as ComboBox;
+    ComboBox? EffectCombo => voiceEffect;
     void ToggleRolling()
     {
         if (rolling != null) { StopRolling(); return; }
@@ -271,7 +290,7 @@ public sealed partial class EntertainmentPanel : UserControl
     void StopMonitor()
     {
         try { monitor?.Stop(); } catch { }
-        monitor?.Dispose(); monitor = null; monitorMixer = null;
+        monitor?.Dispose(); monitor = null; monitorMixer?.Dispose(); monitorMixer = null;
         monitorEndpoint?.Dispose(); monitorEndpoint = null;
     }
     void PreviewSelected(bool original = false)
@@ -404,8 +423,12 @@ public sealed partial class EntertainmentPanel : UserControl
             monitorClips.Checked = config.MonitorClips;
             seconds.Value = Math.Clamp(config.ClipSeconds, 1, 15); master.Value = (int)(Math.Clamp(config.Master, 0, 1) * 100); State.Master = master.Value / 100f;
             clipFocus.SelectedItem = clipFocus.Items.Contains(config.ClipFocus) ? config.ClipFocus : "Natural";
-            State.VoicePreset = VoiceEffects.Factor(config.VoicePreset) == 1 ? "Off" : config.VoicePreset;
-            if (EffectCombo is { } effect) effect.SelectedItem = State.VoicePreset;
+            customVoices = (config.CustomVoices ?? new()).Where(p => p.Key.Length is > 0 and <= 60 && p.Key != "Off" && !VoxPresets.Builtin.ContainsKey(p.Key)).Take(32).ToDictionary(p => p.Key, p => VoxPresets.Sanitize(p.Value));
+            foreach (string name in customVoices.Keys) if (!voiceEffect.Items.Contains(name)) voiceEffect.Items.Add(name);
+            State.VoicePreset = VoiceNames.Contains(config.VoicePreset) ? config.VoicePreset : "Off";
+            voiceEffect.SelectedItem = State.VoicePreset;
+            voiceParameters = VoxPresets.Sanitize(config.VoiceParameters ?? voiceParameters);
+            State.VoiceParameters = JsonSerializer.Serialize(voiceParameters);
             for (int i = 0; i < clipSource.Items.Count; i++) if (clipSource.Items[i] is ClipSource source && source.Id == config.ClipSource && source.Desktop == config.ClipDesktop) clipSource.SelectedIndex = i;
             for (int i = 0; i < previewDevice.Items.Count; i++) if (previewDevice.Items[i] is DeviceChoice d && d.Id == config.PreviewDevice) previewDevice.SelectedIndex = i;
             int missing = 0;
@@ -431,7 +454,7 @@ public sealed partial class EntertainmentPanel : UserControl
         try
         {
             var source = clipSource.SelectedItem as ClipSource;
-            config = config with { Sounds = library.Entries.ToList(), ClipSeconds = seconds.Value, ClipSource = source?.Id, ClipDesktop = source?.Desktop ?? true, Master = State.Master, VoicePreset = State.VoicePreset, PreviewDevice = (previewDevice.SelectedItem as DeviceChoice)?.Id, LastClip = lastClip != null && library.Clips.ContainsKey(lastClip) ? lastClip : null, ClipFocus = clipFocus.SelectedItem?.ToString() ?? "Off", MonitorClips = monitorClips.Checked };
+            config = config with { Sounds = library.Entries.ToList(), ClipSeconds = seconds.Value, ClipSource = source?.Id, ClipDesktop = source?.Desktop ?? true, Master = State.Master, VoicePreset = State.VoicePreset, PreviewDevice = (previewDevice.SelectedItem as DeviceChoice)?.Id, LastClip = lastClip != null && library.Clips.ContainsKey(lastClip) ? lastClip : null, ClipFocus = clipFocus.SelectedItem?.ToString() ?? "Off", MonitorClips = monitorClips.Checked, VoiceParameters = new(voiceParameters), CustomVoices = customVoices };
             Directory.CreateDirectory(dataRoot);
             string path = Path.Combine(dataRoot, "board.json"); File.WriteAllText(path + ".tmp", JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true })); File.Move(path + ".tmp", path, true);
         }
@@ -467,9 +490,3 @@ static class KeyDialog
         form.ShowDialog(owner); return Accepted ? result : null;
     }
 }
-
-
-
-
-
-

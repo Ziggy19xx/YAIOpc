@@ -17,8 +17,8 @@ static class Installer
 {
     const string RegistryPath = @"Software\Microsoft\Windows\CurrentVersion\Uninstall\VelvetVoice";
     static string InstallRoot { get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Programs", "VelvetVoice"); } }
-    static string DesktopLink { get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "Velvet Voice.lnk"); } }
-    static string MenuLink { get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Programs), "Velvet Voice.lnk"); } }
+    static string DesktopLink { get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "Velvet Audio.lnk"); } }
+    static string MenuLink { get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Programs), "Velvet Audio.lnk"); } }
     static Assembly Assembly { get { return typeof(Installer).Assembly; } }
     [STAThread]
     static int Main(string[] args)
@@ -37,7 +37,7 @@ static class Installer
         }
         catch (Exception ex)
         {
-            if (args.Length == 0) MessageBox.Show(ex.Message, "Velvet Voice setup", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            if (args.Length == 0) MessageBox.Show(ex.Message, "Velvet Audio setup", MessageBoxButtons.OK, MessageBoxIcon.Error);
             else File.WriteAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "setup-error.txt"), ex.ToString());
             return 1;
         }
@@ -92,15 +92,16 @@ static class Installer
         {
             using (p)
             {
-                try { if (p.MainModule.FileName.StartsWith(InstallRoot + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase)) throw new IOException("Close Velvet Voice before updating it."); }
+                try { if (p.MainModule.FileName.StartsWith(InstallRoot + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase)) throw new IOException("Close Velvet Audio before updating it."); }
                 catch (System.ComponentModel.Win32Exception) { }
             }
         }
         Extract(InstallRoot);
+        CleanupLegacyShortcuts();
         Shortcut(DesktopLink, false); Shortcut(MenuLink, false);
         using (var key = Registry.CurrentUser.CreateSubKey(RegistryPath))
         {
-            key.SetValue("DisplayName", "Velvet Voice"); key.SetValue("DisplayVersion", "1.4.0");
+            key.SetValue("DisplayName", "Velvet Audio"); key.SetValue("DisplayVersion", "1.4.0");
             key.SetValue("InstallLocation", InstallRoot); key.SetValue("DisplayIcon", Path.Combine(InstallRoot, "VelvetVoice.exe"));
             key.SetValue("UninstallString", "\"" + Path.Combine(InstallRoot, "Uninstall.exe") + "\" --uninstall");
             key.SetValue("NoModify", 1, RegistryValueKind.DWord); key.SetValue("NoRepair", 1, RegistryValueKind.DWord);
@@ -121,7 +122,7 @@ static class Installer
                 if (string.Equals(existing, target, StringComparison.OrdinalIgnoreCase)) File.Delete(path);
                 return;
             }
-            foreach (var property in new[] { new[] { "TargetPath", target }, new[] { "WorkingDirectory", InstallRoot }, new[] { "IconLocation", target + ",0" }, new[] { "Description", "Velvet Voice microphone processor" } })
+            foreach (var property in new[] { new[] { "TargetPath", target }, new[] { "WorkingDirectory", InstallRoot }, new[] { "IconLocation", target + ",0" }, new[] { "Description", "Velvet Audio microphone processor" } })
                 shortcut.GetType().InvokeMember(property[0], BindingFlags.SetProperty, null, shortcut, new object[] { property[1] });
             shortcut.GetType().InvokeMember("Save", BindingFlags.InvokeMethod, null, shortcut, null);
         }
@@ -131,17 +132,17 @@ static class Installer
     {
         using (var form = new Form())
         {
-            form.Text = "Velvet Voice setup"; form.ClientSize = new Size(590, 380); form.FormBorderStyle = FormBorderStyle.FixedDialog;
+            form.Text = "Velvet Audio setup"; form.ClientSize = new Size(590, 380); form.FormBorderStyle = FormBorderStyle.FixedDialog;
             form.MaximizeBox = false; form.StartPosition = FormStartPosition.CenterScreen; form.Font = new Font("Segoe UI", 10);
             form.BackColor = Color.FromArgb(16, 23, 32); form.ForeColor = Color.FromArgb(224, 232, 238);
             form.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
             using (var stream = Assembly.GetManifestResourceStream("logo.png"))
             using (var image = Image.FromStream(stream))
                 form.Controls.Add(new PictureBox { Image = new Bitmap(image), SizeMode = PictureBoxSizeMode.Zoom, Bounds = new Rectangle(24, 22, 78, 78) });
-            form.Controls.Add(new Label { Text = "VELVET VOICE", Font = new Font("Segoe UI", 20, FontStyle.Bold), Bounds = new Rectangle(118, 23, 430, 40) });
+            form.Controls.Add(new Label { Text = "VELVET AUDIO", Font = new Font("Segoe UI", 20, FontStyle.Bold), Bounds = new Rectangle(118, 23, 430, 40) });
             form.Controls.Add(new Label { Text = "Broadcast character. Every whisper intact.", Bounds = new Rectangle(120, 66, 430, 28) });
             form.Controls.Add(new Label { Text = "Install the desktop app for your Windows account.\nStudio processing, soundboard, instant clips, and voice effects.\nIncludes the runtime and desktop / Start menu shortcuts.\nVoiceMeeter and VB-CABLE are separate audio drivers.\n\nInstallation folder:\n" + InstallRoot, Bounds = new Rectangle(26, 120, 540, 145) });
-            var launch = new CheckBox { Text = "Open Velvet Voice after installation", Checked = true, Bounds = new Rectangle(26, 278, 470, 28) }; form.Controls.Add(launch);
+            var launch = new CheckBox { Text = "Open Velvet Audio after installation", Checked = true, Bounds = new Rectangle(26, 278, 470, 28) }; form.Controls.Add(launch);
             var status = new Label { Bounds = new Rectangle(26, 342, 535, 28) }; form.Controls.Add(status);
             var button = new Button { Text = "Install", Bounds = new Rectangle(405, 302, 155, 36), FlatStyle = FlatStyle.Flat, BackColor = Color.FromArgb(46, 133, 121), ForeColor = Color.White }; form.Controls.Add(button);
             bool installed = false;
@@ -168,10 +169,15 @@ static class Installer
     }
     static void BeginUninstall()
     {
-        if (MessageBox.Show("Remove Velvet Voice and its shortcuts?\nYour saved voice settings will be retained. Close the app first.", "Uninstall Velvet Voice", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes) return;
+        if (MessageBox.Show("Remove Velvet Audio and its shortcuts?\nYour saved voice settings will be retained. Close the app first.", "Uninstall Velvet Audio", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes) return;
         var worker = Path.Combine(Path.GetTempPath(), "VelvetVoice-Uninstall-" + Guid.NewGuid().ToString("N") + ".exe");
         File.Copy(Application.ExecutablePath, worker);
         Process.Start(new ProcessStartInfo(worker, "--remove " + Process.GetCurrentProcess().Id) { UseShellExecute = false, CreateNoWindow = true, WindowStyle = ProcessWindowStyle.Hidden });
+    }
+    static void CleanupLegacyShortcuts()
+    {
+        Shortcut(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "Velvet Voice.lnk"), true);
+        Shortcut(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Programs), "Velvet Voice.lnk"), true);
     }
     static void Remove(int parentId)
     {
@@ -180,6 +186,7 @@ static class Installer
         string expected = Path.GetFullPath(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Programs", "VelvetVoice"));
         if (!string.Equals(root, expected, StringComparison.OrdinalIgnoreCase)) throw new IOException("Unexpected uninstall directory.");
         if (Directory.Exists(root) && (File.GetAttributes(root) & FileAttributes.ReparsePoint) != 0) throw new IOException("Uninstall directory cannot be a link.");
+        CleanupLegacyShortcuts();
         Shortcut(DesktopLink, true); Shortcut(MenuLink, true);
         if (Directory.Exists(root))
         {
@@ -194,8 +201,3 @@ static class Installer
         Registry.CurrentUser.DeleteSubKeyTree(RegistryPath, false);
     }
 }
-
-
-
-
-

@@ -1,6 +1,6 @@
-# FramePilot + Velvet Voice
+# FramePilot + Velvet Audio
 
-A Windows x64 desktop application that combines FramePilot performance tools and Velvet Voice audio tools in one .NET 8 WPF window.
+A Windows x64 desktop application that combines FramePilot performance tools and Velvet Audio audio tools in one .NET 8 WPF window.
 
 The maintained application is in `CombinedStudio-source/`. It includes both feature sets, native dependencies, audio models, and bundled Python runtimes. Earlier source copies and generated distributions in this workspace are excluded from Git.
 

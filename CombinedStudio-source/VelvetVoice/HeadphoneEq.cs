@@ -10,7 +10,7 @@ internal sealed record EqProfile(string Name, float[] Bands, float Preamp = 0)
 {
     public override string ToString()=>Name;
 }
-internal sealed record EqConfig(string? Source, string? Output, EqProfile Current, EqProfile[] Saved);
+internal sealed record EqConfig(string? Source, string? Output, EqProfile Current, EqProfile[] Saved, bool Advanced = false);
 internal sealed record EqParameters(float[] Bands, float Preamp, bool Bypass);
 
 // Independent stereo playback DSP. Settings are immutable snapshots; filter history stays on the render thread.
