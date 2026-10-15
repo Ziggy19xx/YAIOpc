@@ -10,7 +10,7 @@ internal sealed class UiControls
 {
     readonly List<Action> updates=new();
     bool syncing;
-    internal static M.Brush Tone(string hex){var brush=(M.SolidColorBrush)new M.BrushConverter().ConvertFromString(hex)!;brush.Freeze();return brush;}
+    internal static M.Brush Tone(string hex)=>CombinedStudio.ThemePalette.Brush(hex);
     internal static readonly M.Brush Ink=Tone("#F3ECE4"),Muted=Tone("#A39789"),Accent=Tone("#E8964A"),Line=Tone("#2B231D"),Panel=Tone("#1A1613"),Raised=Tone("#221C18");
     internal static C.TextBlock Text(string text,double size=13,M.Brush? color=null)=>new(){Text=text,FontSize=size,Foreground=color??Ink,TextWrapping=W.TextWrapping.Wrap,Margin=new W.Thickness(0,0,0,8)};
     internal static C.Border Card(W.UIElement content)=>new(){Child=content,Background=Panel,BorderBrush=Line,BorderThickness=new W.Thickness(1),CornerRadius=new W.CornerRadius(14),Padding=new W.Thickness(20),Margin=new W.Thickness(0,0,0,14)};

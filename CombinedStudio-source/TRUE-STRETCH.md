@@ -1,3 +1,16 @@
+# Confirmed True Stretch method — October 15, 2026
+
+User confirmed this exact order produces both stretch and no black bars:
+1. VALORANT: Windowed mode.
+2. Switch to Fullscreen and Fill; apply/confirm.
+3. Switch back to Windowed and Fill; apply/confirm.
+4. Then apply the custom stretch resolution in YAIOpc.
+
+Fill alone removed the bars but lost the desired stretch. Do not treat no bars alone as success. This supersedes older Windowed Fullscreen guidance for this user's setup. Keep this recipe visible in True Stretch.
+
+Added Apply + fit VALORANT: switches the chosen resolution then performs the existing borderless window fit. It does NOT execute VALORANT's internal menu transitions. Those transitions remain unautomated: Windows game UI input failed with SendInput error 87 during live testing; no working settings-control API was established. Do not claim full one-click engine setup. User confirmed the combined Apply + fit VALORANT action works perfectly on October 15, 2026, preserving stretch and removing the black bars. This validates their setup; it does not establish automated internal game-menu transitions. No game configs, Windows monitor devices or live resolutions were changed by this update.
+
+Latest build: outputs/YAIOpc-TrueStretch-Workflow/YAIOpc.exe. All changes local/unpushed.
 # True Stretch
 
 Open **Customization → True Stretch**. This native page provides the display switching workflow described by [EasyTS v4.0.0](https://github.com/ahhmilo/EasyTS/releases/tag/v4.0.0), implemented independently. No EasyTS code or executable is bundled.

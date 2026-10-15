@@ -1,0 +1,5 @@
+PresentMon 2.3.1 x64 official console binary
+https://github.com/GameTechDev/PresentMon/releases/tag/v2.3.1
+SHA256 364e5d98d4d134bd54dd25c22ed2ca2f4883f8bc3ed6502bee0c151e3436d30c
+Pinned after real ETW capture validation; PresentMon 2.6.0 did not emit frame CSV on this host.
+MIT license and third-party notices included.

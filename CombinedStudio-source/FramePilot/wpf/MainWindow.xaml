@@ -3,7 +3,7 @@
  xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
  xmlns:wfi="clr-namespace:System.Windows.Forms.Integration;assembly=WindowsFormsIntegration"
  Title="YAIOpc" Width="1320" Height="860" MinWidth="1050" MinHeight="700"
- WindowStyle="None" ResizeMode="CanResize" Background="#0D0B0A" Foreground="#F3ECE4"
+ WindowStyle="None" ResizeMode="CanResize" Background="{DynamicResource ThemeHex0D0B0ABrush}" Foreground="{DynamicResource ThemeHexF3ECE4Brush}"
  FontFamily="Segoe UI Variable Display, Segoe UI" FontSize="14"
  WindowStartupLocation="CenterScreen" UseLayoutRounding="True" TextOptions.TextFormattingMode="Ideal">
  <shell:WindowChrome.WindowChrome>
@@ -11,17 +11,17 @@
  </shell:WindowChrome.WindowChrome>
  <Window.Resources>
   <!-- ===== Design tokens ===== -->
-  <SolidColorBrush x:Key="Bg" Color="#0D0B0A"/>
-  <SolidColorBrush x:Key="Sidebar" Color="#13100E"/>
-  <SolidColorBrush x:Key="Panel" Color="#1A1613"/>
-  <SolidColorBrush x:Key="PanelRaised" Color="#221C18"/>
-  <SolidColorBrush x:Key="Line" Color="#2B231D"/>
-  <SolidColorBrush x:Key="Ink" Color="#F3ECE4"/>
-  <SolidColorBrush x:Key="Muted" Color="#A39789"/>
-  <SolidColorBrush x:Key="Dim" Color="#6F6358"/>
-  <SolidColorBrush x:Key="Accent" Color="#E8964A"/>
-  <SolidColorBrush x:Key="AccentHot" Color="#F2A55A"/>
-  <SolidColorBrush x:Key="AccentSoft" Color="#46301F"/>
+  <SolidColorBrush x:Key="Bg" Color="{DynamicResource ThemeHex0D0B0AColor}"/>
+  <SolidColorBrush x:Key="Sidebar" Color="{DynamicResource ThemeHex13100EColor}"/>
+  <SolidColorBrush x:Key="Panel" Color="{DynamicResource ThemeHex1A1613Color}"/>
+  <SolidColorBrush x:Key="PanelRaised" Color="{DynamicResource ThemeHex221C18Color}"/>
+  <SolidColorBrush x:Key="Line" Color="{DynamicResource ThemeHex2B231DColor}"/>
+  <SolidColorBrush x:Key="Ink" Color="{DynamicResource ThemeHexF3ECE4Color}"/>
+  <SolidColorBrush x:Key="Muted" Color="{DynamicResource ThemeHexA39789Color}"/>
+  <SolidColorBrush x:Key="Dim" Color="{DynamicResource ThemeHex6F6358Color}"/>
+  <SolidColorBrush x:Key="Accent" Color="{DynamicResource ThemeHexE8964AColor}"/>
+  <SolidColorBrush x:Key="AccentHot" Color="{DynamicResource ThemeHexF2A55AColor}"/>
+  <SolidColorBrush x:Key="AccentSoft" Color="{DynamicResource ThemeHex46301FColor}"/>
   <SolidColorBrush x:Key="Good" Color="#2FCB8D"/>
   <SolidColorBrush x:Key="Info" Color="#4C8DF6"/>
   <SolidColorBrush x:Key="Violet" Color="#9B6BF2"/>
@@ -41,10 +41,10 @@
    <Setter Property="Foreground" Value="{StaticResource Ink}"/><Setter Property="Background" Value="{StaticResource PanelRaised}"/>
    <Setter Property="Padding" Value="16,9"/><Setter Property="Margin" Value="0,0,8,8"/><Setter Property="Cursor" Value="Hand"/><Setter Property="FontWeight" Value="Medium"/>
    <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="Button">
-    <Border x:Name="Bd" CornerRadius="9" BorderBrush="#3A2F27" BorderThickness="1" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+    <Border x:Name="Bd" CornerRadius="9" BorderBrush="{DynamicResource ThemeHex3A2F27Brush}" BorderThickness="1" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
      <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
     </Border><ControlTemplate.Triggers>
-     <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource Accent}"/><Setter TargetName="Bd" Property="Background" Value="#2A221C"/></Trigger>
+     <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource Accent}"/><Setter TargetName="Bd" Property="Background" Value="{DynamicResource ThemeHex2A221CBrush}"/></Trigger>
      <Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource AccentHot}"/><Setter TargetName="Bd" Property="BorderThickness" Value="2"/></Trigger>
      <Trigger Property="IsPressed" Value="True"><Setter TargetName="Bd" Property="Background" Value="{StaticResource AccentSoft}"/></Trigger>
      <Trigger Property="IsEnabled" Value="False"><Setter Property="Opacity" Value="0.4"/></Trigger>
@@ -52,14 +52,14 @@
    </ControlTemplate></Setter.Value></Setter>
   </Style>
   <Style x:Key="PrimaryButton" TargetType="Button">
-   <Setter Property="Foreground" Value="#1A1109"/><Setter Property="Padding" Value="20,10"/><Setter Property="Margin" Value="0"/><Setter Property="Cursor" Value="Hand"/><Setter Property="FontWeight" Value="SemiBold"/>
+   <Setter Property="Foreground" Value="{DynamicResource ThemeHex1A1109Brush}"/><Setter Property="Padding" Value="20,10"/><Setter Property="Margin" Value="0"/><Setter Property="Cursor" Value="Hand"/><Setter Property="FontWeight" Value="SemiBold"/>
    <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="Button">
     <Border x:Name="Bd" CornerRadius="9" Background="{StaticResource Accent}" Padding="{TemplateBinding Padding}">
      <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
     </Border><ControlTemplate.Triggers>
      <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Bd" Property="Background" Value="{StaticResource AccentHot}"/></Trigger>
      <Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="Bd" Property="BorderBrush" Value="White"/><Setter TargetName="Bd" Property="BorderThickness" Value="2"/></Trigger>
-     <Trigger Property="IsPressed" Value="True"><Setter TargetName="Bd" Property="Background" Value="#C77A3A"/></Trigger>
+     <Trigger Property="IsPressed" Value="True"><Setter TargetName="Bd" Property="Background" Value="{DynamicResource ThemeHexC77A3ABrush}"/></Trigger>
      <Trigger Property="IsEnabled" Value="False"><Setter Property="Opacity" Value="0.4"/></Trigger>
     </ControlTemplate.Triggers>
    </ControlTemplate></Setter.Value></Setter>
@@ -68,8 +68,8 @@
    <Setter Property="Foreground" Value="{StaticResource Accent}"/><Setter Property="Cursor" Value="Hand"/><Setter Property="FontSize" Value="12"/><Setter Property="Margin" Value="0"/>
    <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="Button">
     <Border x:Name="Bd" Background="Transparent" Padding="8,4" CornerRadius="6"><ContentPresenter/></Border><ControlTemplate.Triggers>
-     <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Bd" Property="Background" Value="#2A221C"/></Trigger>
-     <Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="Bd" Property="Background" Value="#2A221C"/></Trigger>
+     <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Bd" Property="Background" Value="{DynamicResource ThemeHex2A221CBrush}"/></Trigger>
+     <Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="Bd" Property="Background" Value="{DynamicResource ThemeHex2A221CBrush}"/></Trigger>
     </ControlTemplate.Triggers></ControlTemplate></Setter.Value></Setter>
   </Style>
   <Style x:Key="CaptionButton" TargetType="Button">
@@ -78,7 +78,7 @@
    <Setter Property="shell:WindowChrome.IsHitTestVisibleInChrome" Value="True"/>
    <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="Button">
     <Border x:Name="Bd" Background="Transparent" CornerRadius="6" Margin="2,0"><ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/></Border><ControlTemplate.Triggers>
-     <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Bd" Property="Background" Value="#2A221C"/><Setter Property="Foreground" Value="{StaticResource Ink}"/></Trigger>
+     <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Bd" Property="Background" Value="{DynamicResource ThemeHex2A221CBrush}"/><Setter Property="Foreground" Value="{StaticResource Ink}"/></Trigger>
     </ControlTemplate.Triggers></ControlTemplate></Setter.Value></Setter>
   </Style>
   <Style x:Key="CloseButton" TargetType="Button" BasedOn="{StaticResource CaptionButton}">
@@ -109,12 +109,12 @@
   </Style>
   <!-- ===== Navigation ===== -->
   <Style x:Key="NavItem" TargetType="RadioButton">
-   <Setter Property="Foreground" Value="#D9CFC4"/><Setter Property="Margin" Value="0,2"/><Setter Property="Cursor" Value="Hand"/><Setter Property="FontSize" Value="15"/>
+   <Setter Property="Foreground" Value="{DynamicResource ThemeHexD9CFC4Brush}"/><Setter Property="Margin" Value="0,2"/><Setter Property="Cursor" Value="Hand"/><Setter Property="FontSize" Value="15"/>
    <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="RadioButton">
     <Border x:Name="Bd" Background="Transparent" BorderBrush="Transparent" BorderThickness="1" CornerRadius="10" Padding="14,11"><ContentPresenter/></Border>
     <ControlTemplate.Triggers>
-     <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Bd" Property="Background" Value="#1F1A16"/></Trigger>
-     <Trigger Property="IsChecked" Value="True"><Setter TargetName="Bd" Property="Background" Value="#3A2A1D"/><Setter TargetName="Bd" Property="BorderBrush" Value="#4D3827"/><Setter Property="Foreground" Value="White"/></Trigger>
+     <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Bd" Property="Background" Value="{DynamicResource ThemeHex1F1A16Brush}"/></Trigger>
+     <Trigger Property="IsChecked" Value="True"><Setter TargetName="Bd" Property="Background" Value="{DynamicResource ThemeHex3A2A1DBrush}"/><Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource ThemeHex4D3827Brush}"/><Setter Property="Foreground" Value="White"/></Trigger>
      <Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource Accent}"/></Trigger>
     </ControlTemplate.Triggers>
    </ControlTemplate></Setter.Value></Setter>
@@ -124,8 +124,8 @@
    <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="RadioButton">
     <Border x:Name="Bd" Background="Transparent" BorderBrush="Transparent" BorderThickness="1" CornerRadius="8" Padding="14,7"><ContentPresenter/></Border>
     <ControlTemplate.Triggers>
-     <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Bd" Property="Background" Value="#1F1A16"/><Setter Property="Foreground" Value="{StaticResource Ink}"/></Trigger>
-     <Trigger Property="IsChecked" Value="True"><Setter TargetName="Bd" Property="Background" Value="#3A2A1D"/><Setter Property="Foreground" Value="White"/></Trigger>
+     <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Bd" Property="Background" Value="{DynamicResource ThemeHex1F1A16Brush}"/><Setter Property="Foreground" Value="{StaticResource Ink}"/></Trigger>
+     <Trigger Property="IsChecked" Value="True"><Setter TargetName="Bd" Property="Background" Value="{DynamicResource ThemeHex3A2A1DBrush}"/><Setter Property="Foreground" Value="White"/></Trigger>
      <Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource Accent}"/></Trigger>
     </ControlTemplate.Triggers>
    </ControlTemplate></Setter.Value></Setter>
@@ -133,31 +133,31 @@
   <!-- ===== Inputs ===== -->
   <Style TargetType="ListBoxItem">
    <Setter Property="Foreground" Value="{StaticResource Ink}"/><Setter Property="Padding" Value="10,8"/><Setter Property="Margin" Value="0,0,0,4"/><Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-   <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="ListBoxItem"><Border x:Name="Bd" Background="#221C18" CornerRadius="8" BorderThickness="1" BorderBrush="Transparent" Padding="{TemplateBinding Padding}"><ContentPresenter/></Border><ControlTemplate.Triggers><Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Bd" Property="BorderBrush" Value="#5A4A3C"/></Trigger><Trigger Property="IsSelected" Value="True"><Setter TargetName="Bd" Property="Background" Value="#3A2A1D"/><Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource Accent}"/></Trigger><Trigger Property="IsKeyboardFocusWithin" Value="True"><Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource AccentHot}"/></Trigger></ControlTemplate.Triggers></ControlTemplate></Setter.Value></Setter>
+   <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="ListBoxItem"><Border x:Name="Bd" Background="{DynamicResource ThemeHex221C18Brush}" CornerRadius="8" BorderThickness="1" BorderBrush="Transparent" Padding="{TemplateBinding Padding}"><ContentPresenter/></Border><ControlTemplate.Triggers><Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource ThemeHex5A4A3CBrush}"/></Trigger><Trigger Property="IsSelected" Value="True"><Setter TargetName="Bd" Property="Background" Value="{DynamicResource ThemeHex3A2A1DBrush}"/><Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource Accent}"/></Trigger><Trigger Property="IsKeyboardFocusWithin" Value="True"><Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource AccentHot}"/></Trigger></ControlTemplate.Triggers></ControlTemplate></Setter.Value></Setter>
   </Style>
   <Style TargetType="ListViewItem">
    <Setter Property="Foreground" Value="{StaticResource Ink}"/><Setter Property="Background" Value="{StaticResource Panel}"/>
-   <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="ListViewItem"><Border x:Name="Bd" Background="{TemplateBinding Background}" BorderThickness="0,0,0,1" BorderBrush="{StaticResource Line}" Padding="4"><GridViewRowPresenter Content="{TemplateBinding Content}" Columns="{Binding View.Columns, RelativeSource={RelativeSource AncestorType=ListView}}"/></Border><ControlTemplate.Triggers><Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Bd" Property="Background" Value="#2A221C"/></Trigger><Trigger Property="IsSelected" Value="True"><Setter TargetName="Bd" Property="Background" Value="#3A2A1D"/></Trigger><Trigger Property="IsKeyboardFocusWithin" Value="True"><Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource Accent}"/><Setter TargetName="Bd" Property="BorderThickness" Value="1"/></Trigger></ControlTemplate.Triggers></ControlTemplate></Setter.Value></Setter>
+   <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="ListViewItem"><Border x:Name="Bd" Background="{TemplateBinding Background}" BorderThickness="0,0,0,1" BorderBrush="{StaticResource Line}" Padding="4"><GridViewRowPresenter Content="{TemplateBinding Content}" Columns="{Binding View.Columns, RelativeSource={RelativeSource AncestorType=ListView}}"/></Border><ControlTemplate.Triggers><Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Bd" Property="Background" Value="{DynamicResource ThemeHex2A221CBrush}"/></Trigger><Trigger Property="IsSelected" Value="True"><Setter TargetName="Bd" Property="Background" Value="{DynamicResource ThemeHex3A2A1DBrush}"/></Trigger><Trigger Property="IsKeyboardFocusWithin" Value="True"><Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource Accent}"/><Setter TargetName="Bd" Property="BorderThickness" Value="1"/></Trigger></ControlTemplate.Triggers></ControlTemplate></Setter.Value></Setter>
   </Style>
   <Style TargetType="GridViewColumnHeader">
    <Setter Property="Foreground" Value="{StaticResource Muted}"/><Setter Property="Background" Value="{StaticResource PanelRaised}"/><Setter Property="FontSize" Value="12"/><Setter Property="FontWeight" Value="SemiBold"/>
    <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="GridViewColumnHeader"><Border Background="{TemplateBinding Background}" BorderBrush="{StaticResource Line}" BorderThickness="0,0,0,1" Padding="8,12"><ContentPresenter HorizontalAlignment="Left"/></Border></ControlTemplate></Setter.Value></Setter>
   </Style>
   <Style TargetType="TextBox">
-   <Setter Property="Foreground" Value="{StaticResource Ink}"/><Setter Property="CaretBrush" Value="{StaticResource Accent}"/><Setter Property="SelectionBrush" Value="#8A5A2E"/>
+   <Setter Property="Foreground" Value="{StaticResource Ink}"/><Setter Property="CaretBrush" Value="{StaticResource Accent}"/><Setter Property="SelectionBrush" Value="{DynamicResource ThemeHex8A5A2EBrush}"/>
    <Setter Property="Padding" Value="12,9"/>
    <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="TextBox">
-    <Border x:Name="Bd" Background="#120E0C" BorderBrush="#3A2F27" BorderThickness="1" CornerRadius="9"><ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}"/></Border>
+    <Border x:Name="Bd" Background="{DynamicResource ThemeHex120E0CBrush}" BorderBrush="{DynamicResource ThemeHex3A2F27Brush}" BorderThickness="1" CornerRadius="9"><ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}"/></Border>
     <ControlTemplate.Triggers>
      <Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource Accent}"/></Trigger>
-     <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Bd" Property="BorderBrush" Value="#5A4A3C"/></Trigger>
+     <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource ThemeHex5A4A3CBrush}"/></Trigger>
     </ControlTemplate.Triggers></ControlTemplate></Setter.Value></Setter>
   </Style>
   <Style TargetType="CheckBox">
    <Setter Property="Foreground" Value="{StaticResource Ink}"/><Setter Property="Margin" Value="0,6,12,10"/>
    <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="CheckBox">
-    <StackPanel Orientation="Horizontal"><Border x:Name="Bd" Width="20" Height="20" BorderBrush="#6F6358" BorderThickness="1" Background="#120E0C" CornerRadius="6" Margin="0,0,8,0">
-     <TextBlock x:Name="Mark" Text="&#x2713;" Foreground="#1A1109" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed"/>
+    <StackPanel Orientation="Horizontal"><Border x:Name="Bd" Width="20" Height="20" BorderBrush="{DynamicResource ThemeHex6F6358Brush}" BorderThickness="1" Background="{DynamicResource ThemeHex120E0CBrush}" CornerRadius="6" Margin="0,0,8,0">
+     <TextBlock x:Name="Mark" Text="&#x2713;" Foreground="{DynamicResource ThemeHex1A1109Brush}" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed"/>
     </Border><ContentPresenter VerticalAlignment="Center"/></StackPanel>
     <ControlTemplate.Triggers>
      <Trigger Property="IsChecked" Value="True"><Setter TargetName="Bd" Property="Background" Value="{StaticResource Accent}"/><Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource Accent}"/><Setter TargetName="Mark" Property="Visibility" Value="Visible"/></Trigger>
@@ -171,9 +171,9 @@
    <Setter Property="Foreground" Value="{StaticResource Muted}"/><Setter Property="Margin" Value="0"/><Setter Property="Cursor" Value="Hand"/><Setter Property="FontSize" Value="12.5"/>
    <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="CheckBox">
     <StackPanel Orientation="Horizontal"><ContentPresenter VerticalAlignment="Center" Margin="0,0,10,0"/>
-     <Border x:Name="Track" Width="40" Height="22" CornerRadius="11" Background="#3A2F27" BorderBrush="#4A3D33" BorderThickness="1"><Ellipse x:Name="Knob" Width="16" Height="16" Fill="#D9CFC4" HorizontalAlignment="Left" Margin="3,0"/></Border></StackPanel>
+     <Border x:Name="Track" Width="40" Height="22" CornerRadius="11" Background="{DynamicResource ThemeHex3A2F27Brush}" BorderBrush="{DynamicResource ThemeHex4A3D33Brush}" BorderThickness="1"><Ellipse x:Name="Knob" Width="16" Height="16" Fill="{DynamicResource ThemeHexD9CFC4Brush}" HorizontalAlignment="Left" Margin="3,0"/></Border></StackPanel>
     <ControlTemplate.Triggers>
-     <Trigger Property="IsChecked" Value="True"><Setter TargetName="Track" Property="Background" Value="{StaticResource Accent}"/><Setter TargetName="Track" Property="BorderBrush" Value="{StaticResource Accent}"/><Setter TargetName="Knob" Property="HorizontalAlignment" Value="Right"/><Setter TargetName="Knob" Property="Fill" Value="#1A1109"/></Trigger>
+     <Trigger Property="IsChecked" Value="True"><Setter TargetName="Track" Property="Background" Value="{StaticResource Accent}"/><Setter TargetName="Track" Property="BorderBrush" Value="{StaticResource Accent}"/><Setter TargetName="Knob" Property="HorizontalAlignment" Value="Right"/><Setter TargetName="Knob" Property="Fill" Value="{DynamicResource ThemeHex1A1109Brush}"/></Trigger>
      <Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="Track" Property="BorderBrush" Value="{StaticResource AccentHot}"/><Setter TargetName="Track" Property="BorderThickness" Value="2"/></Trigger>
      <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Track" Property="BorderBrush" Value="{StaticResource Accent}"/></Trigger>
     </ControlTemplate.Triggers>
@@ -182,20 +182,20 @@
   <Style TargetType="ComboBoxItem">
    <Setter Property="Foreground" Value="{StaticResource Ink}"/><Setter Property="Padding" Value="12,9"/>
    <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="ComboBoxItem">
-    <Border x:Name="Bd" Padding="{TemplateBinding Padding}" Background="#1A1613" CornerRadius="6" Margin="4,2"><ContentPresenter/></Border>
-    <ControlTemplate.Triggers><Trigger Property="IsHighlighted" Value="True"><Setter TargetName="Bd" Property="Background" Value="#3A2A1D"/></Trigger></ControlTemplate.Triggers>
+    <Border x:Name="Bd" Padding="{TemplateBinding Padding}" Background="{DynamicResource ThemeHex1A1613Brush}" CornerRadius="6" Margin="4,2"><ContentPresenter/></Border>
+    <ControlTemplate.Triggers><Trigger Property="IsHighlighted" Value="True"><Setter TargetName="Bd" Property="Background" Value="{DynamicResource ThemeHex3A2A1DBrush}"/></Trigger></ControlTemplate.Triggers>
    </ControlTemplate></Setter.Value></Setter>
   </Style>
   <Style TargetType="ComboBox">
    <Setter Property="Foreground" Value="{StaticResource Ink}"/><Setter Property="MinHeight" Value="40"/>
    <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="ComboBox">
     <Grid><ToggleButton Focusable="False" IsChecked="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
-     <ToggleButton.Template><ControlTemplate TargetType="ToggleButton"><Border Background="#120E0C" BorderBrush="#3A2F27" BorderThickness="1" CornerRadius="9"><TextBlock Text="&#x25BE;" Foreground="#E8964A" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="12"/></Border></ControlTemplate></ToggleButton.Template>
+     <ToggleButton.Template><ControlTemplate TargetType="ToggleButton"><Border Background="{DynamicResource ThemeHex120E0CBrush}" BorderBrush="{DynamicResource ThemeHex3A2F27Brush}" BorderThickness="1" CornerRadius="9"><TextBlock Text="&#x25BE;" Foreground="{DynamicResource ThemeHexE8964ABrush}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="12"/></Border></ControlTemplate></ToggleButton.Template>
     </ToggleButton><ContentPresenter Content="{TemplateBinding SelectionBoxItem}" ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" Margin="12,6,32,6" VerticalAlignment="Center" IsHitTestVisible="False"/>
     <Popup x:Name="PART_Popup" IsOpen="{TemplateBinding IsDropDownOpen}" Placement="Bottom" AllowsTransparency="True" Focusable="False">
-     <Border Background="#1A1613" BorderBrush="#E8964A" BorderThickness="1" CornerRadius="9" Margin="0,4,0,0" MinWidth="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}"><ScrollViewer MaxHeight="320" Margin="0,4"><ItemsPresenter KeyboardNavigation.DirectionalNavigation="Contained"/></ScrollViewer></Border>
+     <Border Background="{DynamicResource ThemeHex1A1613Brush}" BorderBrush="{DynamicResource ThemeHexE8964ABrush}" BorderThickness="1" CornerRadius="9" Margin="0,4,0,0" MinWidth="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}"><ScrollViewer MaxHeight="320" Margin="0,4"><ItemsPresenter KeyboardNavigation.DirectionalNavigation="Contained"/></ScrollViewer></Border>
     </Popup></Grid>
-    <ControlTemplate.Triggers><Trigger Property="IsKeyboardFocusWithin" Value="True"><Setter Property="Effect"><Setter.Value><DropShadowEffect Color="#E8964A" BlurRadius="5" ShadowDepth="0" Opacity="0.7"/></Setter.Value></Setter></Trigger></ControlTemplate.Triggers>
+    <ControlTemplate.Triggers><Trigger Property="IsKeyboardFocusWithin" Value="True"><Setter Property="Effect"><Setter.Value><DropShadowEffect Color="{DynamicResource ThemeHexE8964AColor}" BlurRadius="5" ShadowDepth="0" Opacity="0.7"/></Setter.Value></Setter></Trigger></ControlTemplate.Triggers>
    </ControlTemplate></Setter.Value></Setter>
   </Style>
   <Style x:Key="ScrollRepeat" TargetType="RepeatButton"><Setter Property="Focusable" Value="False"/><Setter Property="Template"><Setter.Value><ControlTemplate TargetType="RepeatButton"><Border Background="Transparent"/></ControlTemplate></Setter.Value></Setter></Style>
@@ -204,14 +204,14 @@
    <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="ScrollBar">
     <Grid Background="Transparent"><Track x:Name="PART_Track" IsDirectionReversed="True" Orientation="{TemplateBinding Orientation}">
      <Track.DecreaseRepeatButton><RepeatButton Style="{StaticResource ScrollRepeat}" Command="ScrollBar.PageUpCommand"/></Track.DecreaseRepeatButton>
-     <Track.Thumb><Thumb><Thumb.Template><ControlTemplate TargetType="Thumb"><Border x:Name="Tb" Background="#3A2F27" CornerRadius="5" Margin="3"/><ControlTemplate.Triggers><Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Tb" Property="Background" Value="#5A4A3C"/></Trigger></ControlTemplate.Triggers></ControlTemplate></Thumb.Template></Thumb></Track.Thumb>
+     <Track.Thumb><Thumb><Thumb.Template><ControlTemplate TargetType="Thumb"><Border x:Name="Tb" Background="{DynamicResource ThemeHex3A2F27Brush}" CornerRadius="5" Margin="3"/><ControlTemplate.Triggers><Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Tb" Property="Background" Value="{DynamicResource ThemeHex5A4A3CBrush}"/></Trigger></ControlTemplate.Triggers></ControlTemplate></Thumb.Template></Thumb></Track.Thumb>
      <Track.IncreaseRepeatButton><RepeatButton Style="{StaticResource ScrollRepeat}" Command="ScrollBar.PageDownCommand"/></Track.IncreaseRepeatButton>
     </Track></Grid>
    </ControlTemplate></Setter.Value></Setter>
    <Style.Triggers><Trigger Property="Orientation" Value="Horizontal"><Setter Property="Width" Value="Auto"/><Setter Property="Height" Value="12"/><Setter Property="MinHeight" Value="0"/></Trigger></Style.Triggers>
   </Style>
-  <Style TargetType="ProgressBar"><Setter Property="Height" Value="7"/><Setter Property="Template"><Setter.Value><ControlTemplate TargetType="ProgressBar"><Grid><Border x:Name="PART_Track" Background="#0D0B0A" CornerRadius="4"/><Border x:Name="PART_Indicator" Background="#E8964A" HorizontalAlignment="Left" CornerRadius="4"/></Grid></ControlTemplate></Setter.Value></Setter></Style>
-  <Style TargetType="ToolTip"><Setter Property="Background" Value="#221C18"/><Setter Property="Foreground" Value="{StaticResource Ink}"/><Setter Property="BorderBrush" Value="#3A2F27"/><Setter Property="Padding" Value="10,6"/></Style>
+  <Style TargetType="ProgressBar"><Setter Property="Height" Value="7"/><Setter Property="Template"><Setter.Value><ControlTemplate TargetType="ProgressBar"><Grid><Border x:Name="PART_Track" Background="{DynamicResource ThemeHex0D0B0ABrush}" CornerRadius="4"/><Border x:Name="PART_Indicator" Background="{DynamicResource ThemeHexE8964ABrush}" HorizontalAlignment="Left" CornerRadius="4"/></Grid></ControlTemplate></Setter.Value></Setter></Style>
+  <Style TargetType="ToolTip"><Setter Property="Background" Value="{DynamicResource ThemeHex221C18Brush}"/><Setter Property="Foreground" Value="{StaticResource Ink}"/><Setter Property="BorderBrush" Value="{DynamicResource ThemeHex3A2F27Brush}"/><Setter Property="Padding" Value="10,6"/></Style>
  </Window.Resources>
  <Grid x:Name="Root">
   <Grid.ColumnDefinitions><ColumnDefinition Width="252"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
@@ -220,16 +220,16 @@
   <Border Grid.RowSpan="3" Background="{StaticResource Sidebar}" BorderBrush="{StaticResource Line}" BorderThickness="0,0,1,0" Padding="14,18,14,14">
    <DockPanel>
     <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="8,0,0,18">
-     <Viewbox Width="44" Height="30" Margin="0,0,12,0"><Path Fill="#F3ECE4" Data="M7,3 C4,3 2,6 1.2,10.5 L0.2,16.5 C-0.2,19 1,21 3,21 C4.2,21 5,20.2 6,19 L8,16.5 L16,16.5 L18,19 C19,20.2 19.8,21 21,21 C23,21 24.2,19 23.8,16.5 L22.8,10.5 C22,6 20,3 17,3 Z"/></Viewbox>
+     <Viewbox Width="44" Height="30" Margin="0,0,12,0"><Path Fill="{DynamicResource ThemeHexF3ECE4Brush}" Data="M7,3 C4,3 2,6 1.2,10.5 L0.2,16.5 C-0.2,19 1,21 3,21 C4.2,21 5,20.2 6,19 L8,16.5 L16,16.5 L18,19 C19,20.2 19.8,21 21,21 C23,21 24.2,19 23.8,16.5 L22.8,10.5 C22,6 20,3 17,3 Z"/></Viewbox>
      <StackPanel VerticalAlignment="Center"><TextBlock Text="YAIOpc" FontSize="22" FontWeight="SemiBold" Foreground="{StaticResource Ink}"/><TextBlock Text="PERFORMANCE STUDIO" FontSize="10" Foreground="{StaticResource Muted}"/></StackPanel>
     </StackPanel>
     <Button x:Name="HelpButton" Style="{StaticResource LinkButton}" DockPanel.Dock="Bottom" Margin="0" HorizontalAlignment="Stretch" AutomationProperties.Name="About and sources">
-     <StackPanel Orientation="Horizontal"><Border Width="36" Height="36" CornerRadius="18" Background="#221C18"><TextBlock Text="&#xE897;" FontFamily="{StaticResource IconFont}" FontSize="16" Foreground="{StaticResource Muted}" HorizontalAlignment="Center" VerticalAlignment="Center"/></Border>
-      <StackPanel Margin="12,0,0,0" VerticalAlignment="Center"><TextBlock Text="Need help?" FontSize="13" Foreground="#D9CFC4"/><TextBlock Text="About &amp; sources" FontSize="11" Foreground="{StaticResource Dim}"/></StackPanel></StackPanel>
+     <StackPanel Orientation="Horizontal"><Border Width="36" Height="36" CornerRadius="18" Background="{DynamicResource ThemeHex221C18Brush}"><TextBlock Text="&#xE897;" FontFamily="{StaticResource IconFont}" FontSize="16" Foreground="{StaticResource Muted}" HorizontalAlignment="Center" VerticalAlignment="Center"/></Border>
+      <StackPanel Margin="12,0,0,0" VerticalAlignment="Center"><TextBlock Text="Need help?" FontSize="13" Foreground="{DynamicResource ThemeHexD9CFC4Brush}"/><TextBlock Text="About &amp; sources" FontSize="11" Foreground="{StaticResource Dim}"/></StackPanel></StackPanel>
     </Button>
-    <Border x:Name="SideStatus" DockPanel.Dock="Bottom" Background="#1A1613" BorderBrush="{StaticResource Line}" BorderThickness="1" CornerRadius="12" Padding="14,12" Margin="0,10,0,12">
+    <Border x:Name="SideStatus" DockPanel.Dock="Bottom" Background="{DynamicResource ThemeHex1A1613Brush}" BorderBrush="{StaticResource Line}" BorderThickness="1" CornerRadius="12" Padding="14,12" Margin="0,10,0,12">
      <StackPanel Orientation="Horizontal">
-      <Border x:Name="SideStatusDot" Width="34" Height="34" CornerRadius="17" Background="#2FCB8D"><TextBlock x:Name="SideStatusGlyph" Text="&#xE73E;" FontFamily="{StaticResource IconFont}" FontSize="15" Foreground="#0D0B0A" HorizontalAlignment="Center" VerticalAlignment="Center"/></Border>
+      <Border x:Name="SideStatusDot" Width="34" Height="34" CornerRadius="17" Background="#2FCB8D"><TextBlock x:Name="SideStatusGlyph" Text="&#xE73E;" FontFamily="{StaticResource IconFont}" FontSize="15" Foreground="{DynamicResource ThemeHex0D0B0ABrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/></Border>
       <StackPanel Margin="12,0,0,0" VerticalAlignment="Center" MaxWidth="150"><TextBlock x:Name="SideStatusTitle" Text="Monitoring is off" FontSize="12.5" FontWeight="SemiBold" TextWrapping="Wrap"/><TextBlock x:Name="SideStatusText" Text="Turn it on from Home." FontSize="11" Foreground="{StaticResource Muted}" TextWrapping="Wrap"/></StackPanel>
      </StackPanel>
     </Border>
@@ -238,7 +238,7 @@
       <Expander x:Name="MoreTools" Header="More tools" IsExpanded="False" Margin="0,12,0,0" Foreground="{StaticResource Muted}" AutomationProperties.Name="More tools">
        <Expander.Template><ControlTemplate TargetType="Expander"><StackPanel>
         <ToggleButton x:Name="Toggle" IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}" Content="{TemplateBinding Header}" Foreground="{TemplateBinding Foreground}" FontSize="13" Cursor="Hand" AutomationProperties.Name="{Binding Path=(AutomationProperties.Name), RelativeSource={RelativeSource TemplatedParent}}">
-         <ToggleButton.Template><ControlTemplate TargetType="ToggleButton"><Border x:Name="HeaderBorder" Background="Transparent" CornerRadius="8" Padding="14,10"><DockPanel><TextBlock x:Name="Chevron" DockPanel.Dock="Right" Text="&#xE76C;" FontFamily="Segoe MDL2 Assets" FontSize="12" VerticalAlignment="Center"/><ContentPresenter VerticalAlignment="Center"/></DockPanel></Border><ControlTemplate.Triggers><Trigger Property="IsChecked" Value="True"><Setter TargetName="Chevron" Property="Text" Value="&#xE70D;"/></Trigger><Trigger Property="IsMouseOver" Value="True"><Setter TargetName="HeaderBorder" Property="Background" Value="#221C18"/></Trigger><Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="HeaderBorder" Property="Background" Value="#46301F"/></Trigger></ControlTemplate.Triggers></ControlTemplate></ToggleButton.Template>
+         <ToggleButton.Template><ControlTemplate TargetType="ToggleButton"><Border x:Name="HeaderBorder" Background="Transparent" CornerRadius="8" Padding="14,10"><DockPanel><TextBlock x:Name="Chevron" DockPanel.Dock="Right" Text="&#xE76C;" FontFamily="Segoe MDL2 Assets" FontSize="12" VerticalAlignment="Center"/><ContentPresenter VerticalAlignment="Center"/></DockPanel></Border><ControlTemplate.Triggers><Trigger Property="IsChecked" Value="True"><Setter TargetName="Chevron" Property="Text" Value="&#xE70D;"/></Trigger><Trigger Property="IsMouseOver" Value="True"><Setter TargetName="HeaderBorder" Property="Background" Value="{DynamicResource ThemeHex221C18Brush}"/></Trigger><Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="HeaderBorder" Property="Background" Value="{DynamicResource ThemeHex46301FBrush}"/></Trigger></ControlTemplate.Triggers></ControlTemplate></ToggleButton.Template>
         </ToggleButton>
         <ContentPresenter x:Name="ToolsContent" ContentSource="Content" Visibility="Collapsed"/>
        </StackPanel><ControlTemplate.Triggers><Trigger Property="IsExpanded" Value="True"><Setter TargetName="ToolsContent" Property="Visibility" Value="Visible"/></Trigger></ControlTemplate.Triggers></ControlTemplate></Expander.Template>
@@ -260,48 +260,42 @@
     <StackPanel Margin="26,0,26,20">
      <!-- Hero -->
      <Border x:Name="HeroCard" CornerRadius="16" BorderBrush="{StaticResource Line}" BorderThickness="1" Height="232" Margin="0,0,0,14">
-      <Border.Background><LinearGradientBrush StartPoint="0,0" EndPoint="1,1"><GradientStop Color="#1A1310" Offset="0"/><GradientStop Color="#3A2314" Offset="1"/></LinearGradientBrush></Border.Background>
+      <Border.Background><LinearGradientBrush StartPoint="0,0" EndPoint="1,1"><GradientStop Color="#1A1310" Offset="0"/><GradientStop Color="{DynamicResource ThemeHex3A2314Color}" Offset="1"/></LinearGradientBrush></Border.Background>
       <Border CornerRadius="15">
-       <Border.Background><LinearGradientBrush StartPoint="0,0" EndPoint="1,0"><GradientStop Color="#F00D0B0A" Offset="0"/><GradientStop Color="#E00D0B0A" Offset="0.30"/><GradientStop Color="#400D0B0A" Offset="0.52"/><GradientStop Color="#000D0B0A" Offset="0.78"/></LinearGradientBrush></Border.Background>
+       <Border.Background><LinearGradientBrush StartPoint="0,0" EndPoint="1,0"><GradientStop Color="{DynamicResource ThemeHexF00D0B0AColor}" Offset="0"/><GradientStop Color="{DynamicResource ThemeHexE00D0B0AColor}" Offset="0.30"/><GradientStop Color="{DynamicResource ThemeHex400D0B0AColor}" Offset="0.52"/><GradientStop Color="{DynamicResource ThemeHex000D0B0AColor}" Offset="0.78"/></LinearGradientBrush></Border.Background>
        <StackPanel VerticalAlignment="Center" Margin="34,0,0,0" HorizontalAlignment="Left" MaxWidth="440">
         <TextBlock x:Name="Greeting" Text="GOOD MORNING," FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource Accent}"/>
         <TextBlock Text="Let's get your PC running at its best." FontSize="30" FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,8,0,10" LineHeight="38" LineStackingStrategy="BlockLineHeight"/>
-        <TextBlock Text="Watch your performance, choose what to optimize, and keep a safe way back &#x2014; all in one place." FontSize="14" Foreground="#D9CFC4" TextWrapping="Wrap"/>
+        <TextBlock Text="Watch your performance, choose what to optimize, and keep a safe way back &#x2014; all in one place." FontSize="14" Foreground="{DynamicResource ThemeHexD9CFC4Brush}" TextWrapping="Wrap"/>
        </StackPanel>
       </Border>
      </Border>
      <!-- Stat cards -->
-     <UniformGrid Columns="4" Margin="0,0,0,2">
+     <UniformGrid x:Name="HomeMetrics" Columns="4" Margin="0,0,0,2">
       <Border Style="{StaticResource Card}" Margin="0,0,14,14" Padding="18,16,18,0"><Grid><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="52"/></Grid.RowDefinitions>
-       <StackPanel Orientation="Horizontal"><Border Width="46" Height="46" CornerRadius="12" Background="#2A2420" VerticalAlignment="Top"><Path Width="22" Height="22" Stretch="Uniform" Stroke="#D9CFC4" StrokeThickness="1.5" StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Data="M7,7 H17 V17 H7 Z M10,10 H14 V14 H10 Z M9,3 V7 M12,3 V7 M15,3 V7 M9,17 V21 M12,17 V21 M15,17 V21 M3,9 H7 M3,12 H7 M3,15 H7 M17,9 H21 M17,12 H21 M17,15 H21"/></Border>
-        <StackPanel Margin="14,0,0,0"><TextBlock Text="CPU Usage" FontSize="13" Foreground="#D9CFC4"/><TextBlock x:Name="CpuValue" Text="--" FontSize="28" FontWeight="SemiBold"/>
-         <StackPanel Orientation="Horizontal" Margin="0,2,0,0"><Ellipse x:Name="CpuDot" Width="8" Height="8" Fill="{StaticResource Dim}" VerticalAlignment="Center"/><TextBlock x:Name="CpuState" Text="Not measuring" FontSize="12" Foreground="{StaticResource Muted}" Margin="7,0,0,0"/></StackPanel></StackPanel></StackPanel>
+       <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions><Border Width="46" Height="46" CornerRadius="12" Background="{DynamicResource ThemeHex2A2420Brush}" VerticalAlignment="Top"><Path Width="22" Height="22" Stretch="Uniform" Stroke="{DynamicResource ThemeHexD9CFC4Brush}" StrokeThickness="1.5" StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Data="M7,7 H17 V17 H7 Z M10,10 H14 V14 H10 Z M9,3 V7 M12,3 V7 M15,3 V7 M9,17 V21 M12,17 V21 M15,17 V21 M3,9 H7 M3,12 H7 M3,15 H7 M17,9 H21 M17,12 H21 M17,15 H21"/></Border><StackPanel Grid.Column="1" Margin="14,0,0,0"><TextBlock Text="CPU Usage" FontSize="13" Foreground="{DynamicResource ThemeHexD9CFC4Brush}"/><TextBlock x:Name="CpuValue" Text="--" FontSize="28" FontWeight="SemiBold"/>
+         <StackPanel Orientation="Horizontal" Margin="0,2,0,0"><Ellipse x:Name="CpuDot" Width="8" Height="8" Fill="{StaticResource Dim}" VerticalAlignment="Center"/><TextBlock x:Name="CpuState" Text="Not measuring" FontSize="12" Foreground="{StaticResource Muted}" Margin="7,0,0,0"/></StackPanel></StackPanel></Grid>
        <Canvas x:Name="CpuSpark" Grid.Row="1" ClipToBounds="True" Margin="-6,8,-6,0"/></Grid></Border>
       <Border Style="{StaticResource Card}" Margin="0,0,14,14" Padding="18,16,18,0"><Grid><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="52"/></Grid.RowDefinitions>
-       <StackPanel Orientation="Horizontal"><Border Width="46" Height="46" CornerRadius="12" Background="#1B2436" VerticalAlignment="Top"><Path Width="22" Height="22" Stretch="Uniform" Stroke="#8DB4FA" StrokeThickness="1.5" StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Data="M2,7 H22 V16 H2 Z M6,16 V19 M18,16 V19 M15.5,11.5 A2.5,2.5 0 1 1 10.5,11.5 A2.5,2.5 0 1 1 15.5,11.5"/></Border>
-        <StackPanel Margin="14,0,0,0"><TextBlock Text="GPU Usage" FontSize="13" Foreground="#D9CFC4"/><TextBlock x:Name="GpuValue" Text="--" FontSize="28" FontWeight="SemiBold"/>
-         <StackPanel Orientation="Horizontal" Margin="0,2,0,0"><Ellipse x:Name="GpuDot" Width="8" Height="8" Fill="{StaticResource Dim}" VerticalAlignment="Center"/><TextBlock x:Name="GpuState" Text="Not measuring" FontSize="12" Foreground="{StaticResource Muted}" Margin="7,0,0,0"/></StackPanel></StackPanel></StackPanel>
+       <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions><Border Width="46" Height="46" CornerRadius="12" Background="#1B2436" VerticalAlignment="Top"><Path Width="22" Height="22" Stretch="Uniform" Stroke="#8DB4FA" StrokeThickness="1.5" StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Data="M2,7 H22 V16 H2 Z M6,16 V19 M18,16 V19 M15.5,11.5 A2.5,2.5 0 1 1 10.5,11.5 A2.5,2.5 0 1 1 15.5,11.5"/></Border><StackPanel Grid.Column="1" Margin="14,0,0,0"><TextBlock Text="GPU Usage" FontSize="13" Foreground="{DynamicResource ThemeHexD9CFC4Brush}"/><TextBlock x:Name="GpuValue" Text="--" FontSize="28" FontWeight="SemiBold"/>
+         <StackPanel Orientation="Horizontal" Margin="0,2,0,0"><Ellipse x:Name="GpuDot" Width="8" Height="8" Fill="{StaticResource Dim}" VerticalAlignment="Center"/><TextBlock x:Name="GpuState" Text="Not measuring" FontSize="12" Foreground="{StaticResource Muted}" Margin="7,0,0,0"/></StackPanel></StackPanel></Grid>
        <Canvas x:Name="GpuSpark" Grid.Row="1" ClipToBounds="True" Margin="-6,8,-6,0"/></Grid></Border>
       <Border Style="{StaticResource Card}" Margin="0,0,14,14" Padding="18,16,18,0"><Grid><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="52"/></Grid.RowDefinitions>
-       <StackPanel Orientation="Horizontal"><Border Width="46" Height="46" CornerRadius="12" Background="#251C38" VerticalAlignment="Top"><Path Width="22" Height="22" Stretch="Uniform" Stroke="#C0A3F7" StrokeThickness="1.5" StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Data="M2,8 H22 V15 H2 Z M5,15 V18 M9,15 V18 M13,15 V18 M17,15 V18 M5,11.5 H7 M10,11.5 H12 M15,11.5 H17"/></Border>
-        <StackPanel Margin="14,0,0,0"><TextBlock Text="RAM Usage" FontSize="13" Foreground="#D9CFC4"/><TextBlock x:Name="RamValue" Text="--" FontSize="28" FontWeight="SemiBold"/>
-         <StackPanel Orientation="Horizontal" Margin="0,2,0,0"><Ellipse x:Name="RamDot" Width="8" Height="8" Fill="{StaticResource Dim}" VerticalAlignment="Center"/><TextBlock x:Name="RamState" Text="Not measuring" FontSize="12" Foreground="{StaticResource Muted}" Margin="7,0,0,0"/></StackPanel></StackPanel></StackPanel>
+       <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions><Border Width="46" Height="46" CornerRadius="12" Background="#251C38" VerticalAlignment="Top"><Path Width="22" Height="22" Stretch="Uniform" Stroke="#C0A3F7" StrokeThickness="1.5" StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Data="M2,8 H22 V15 H2 Z M5,15 V18 M9,15 V18 M13,15 V18 M17,15 V18 M5,11.5 H7 M10,11.5 H12 M15,11.5 H17"/></Border><StackPanel Grid.Column="1" Margin="14,0,0,0"><TextBlock Text="RAM Usage" FontSize="13" Foreground="{DynamicResource ThemeHexD9CFC4Brush}"/><TextBlock x:Name="RamValue" Text="--" FontSize="28" FontWeight="SemiBold"/>
+         <StackPanel Orientation="Horizontal" Margin="0,2,0,0"><Ellipse x:Name="RamDot" Width="8" Height="8" Fill="{StaticResource Dim}" VerticalAlignment="Center"/><TextBlock x:Name="RamState" Text="Not measuring" FontSize="12" Foreground="{StaticResource Muted}" Margin="7,0,0,0"/></StackPanel></StackPanel></Grid>
        <Canvas x:Name="RamSpark" Grid.Row="1" ClipToBounds="True" Margin="-6,8,-6,0"/></Grid></Border>
       <Border Style="{StaticResource Card}" Margin="0,0,0,14" Padding="18,16,18,0"><Grid><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="52"/></Grid.RowDefinitions>
-       <StackPanel Orientation="Horizontal"><Border Width="46" Height="46" CornerRadius="12" Background="#2E2214" VerticalAlignment="Top"><Path Width="22" Height="22" Stretch="Uniform" Stroke="#F2C170" StrokeThickness="1.5" StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Data="M4,5 H20 V19 H4 Z M4,14 H20 M16,16.5 H17"/></Border>
-        <StackPanel Margin="14,0,0,0"><TextBlock Text="Disk Usage" FontSize="13" Foreground="#D9CFC4"/><TextBlock x:Name="DiskValue" Text="--" FontSize="28" FontWeight="SemiBold"/>
-         <StackPanel Orientation="Horizontal" Margin="0,2,0,0"><Ellipse x:Name="DiskDot" Width="8" Height="8" Fill="{StaticResource Dim}" VerticalAlignment="Center"/><TextBlock x:Name="DiskState" Text="--" FontSize="12" Foreground="{StaticResource Muted}" Margin="7,0,0,0"/></StackPanel></StackPanel></StackPanel>
+       <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions><Border Width="46" Height="46" CornerRadius="12" Background="{DynamicResource ThemeHex2E2214Brush}" VerticalAlignment="Top"><Path Width="22" Height="22" Stretch="Uniform" Stroke="#F2C170" StrokeThickness="1.5" StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Data="M4,5 H20 V19 H4 Z M4,14 H20 M16,16.5 H17"/></Border><StackPanel Grid.Column="1" Margin="14,0,0,0"><TextBlock Text="Disk Usage" FontSize="13" Foreground="{DynamicResource ThemeHexD9CFC4Brush}"/><TextBlock x:Name="DiskValue" Text="--" FontSize="28" FontWeight="SemiBold"/>
+         <StackPanel Orientation="Horizontal" Margin="0,2,0,0"><Ellipse x:Name="DiskDot" Width="8" Height="8" Fill="{StaticResource Dim}" VerticalAlignment="Center"/><TextBlock x:Name="DiskState" Text="--" FontSize="12" Foreground="{StaticResource Muted}" Margin="7,0,0,0"/></StackPanel></StackPanel></Grid>
        <Canvas x:Name="DiskSpark" Grid.Row="1" ClipToBounds="True" Margin="-6,8,-6,0"/></Grid></Border>
      </UniformGrid>
      <!-- Performance + Quick actions -->
-     <Grid Margin="0,0,0,14"><Grid.ColumnDefinitions><ColumnDefinition Width="1.55*"/><ColumnDefinition Width="1*"/></Grid.ColumnDefinitions>
+     <Grid x:Name="HomePerformance" Margin="0,0,0,14"><Grid.ColumnDefinitions><ColumnDefinition Width="1.55*"/><ColumnDefinition Width="1*"/></Grid.ColumnDefinitions>
       <Border Style="{StaticResource Card}" Margin="0,0,14,0"><Grid>
        <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
-       <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-        <StackPanel><TextBlock Text="Performance Overview" Style="{StaticResource CardTitle}"/><TextBlock Text="Live stats from your PC" Style="{StaticResource CardSub}" Margin="0,2,0,0"/></StackPanel>
-        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Top">
+       <Grid><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions><StackPanel><TextBlock Text="Performance Overview" Style="{StaticResource CardTitle}"/><TextBlock Text="Live stats from your PC" Style="{StaticResource CardSub}" Margin="0,2,0,0"/></StackPanel><WrapPanel Grid.Row="1" Margin="0,12,0,0">
          <CheckBox x:Name="Monitoring" Style="{StaticResource Switch}" Content="Live monitoring" AutomationProperties.Name="Live monitoring (CPU and RAM every second, GPU every two seconds)" ToolTip="Updates CPU and RAM every second and GPU every two seconds while this page is open."/>
-         <Button x:Name="Snapshot" Content="Take snapshot" Margin="16,0,0,0" Padding="12,6" FontSize="12"/></StackPanel></Grid>
+         <Button x:Name="Snapshot" Content="Take snapshot" Margin="16,0,0,0" Padding="12,6" FontSize="12"/></WrapPanel></Grid>
        <Grid Grid.Row="1" Margin="0,16,0,0"><Grid.ColumnDefinitions><ColumnDefinition Width="40"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
         <Grid Height="170"><Grid.RowDefinitions><RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/></Grid.RowDefinitions>
          <TextBlock Text="100%" FontSize="11" Foreground="{StaticResource Muted}" VerticalAlignment="Top" Margin="0,-7,0,0"/>
@@ -314,37 +308,37 @@
        </Grid>
        <Grid Grid.Row="2" Margin="40,10,0,0"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions>
         <TextBlock x:Name="TimeStart" Text="" FontSize="11" Foreground="{StaticResource Muted}"/><TextBlock x:Name="TimeMid" Grid.Column="1" Text="" FontSize="11" Foreground="{StaticResource Muted}" HorizontalAlignment="Center"/><TextBlock x:Name="TimeEnd" Grid.Column="2" Text="" FontSize="11" Foreground="{StaticResource Muted}" HorizontalAlignment="Right"/></Grid>
-       <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="40,12,0,0">
+       <WrapPanel Grid.Row="3" Margin="40,12,0,0">
         <Ellipse Width="8" Height="8" Fill="{StaticResource Good}"/><TextBlock Text="CPU" FontSize="12" Foreground="{StaticResource Muted}" Margin="6,0,18,0"/>
         <Ellipse Width="8" Height="8" Fill="{StaticResource Info}"/><TextBlock Text="GPU" FontSize="12" Foreground="{StaticResource Muted}" Margin="6,0,18,0"/>
         <Ellipse Width="8" Height="8" Fill="{StaticResource Violet}"/><TextBlock Text="RAM" FontSize="12" Foreground="{StaticResource Muted}" Margin="6,0,18,0"/>
-        <TextBlock x:Name="GpuDetail" FontSize="12" Foreground="{StaticResource Dim}" TextTrimming="CharacterEllipsis" MaxWidth="360"/></StackPanel>
+        <TextBlock x:Name="GpuDetail" FontSize="12" Foreground="{StaticResource Dim}" TextWrapping="Wrap" MaxWidth="360"/></WrapPanel>
       </Grid></Border>
       <Border Grid.Column="1" Style="{StaticResource Card}"><StackPanel>
        <StackPanel Orientation="Horizontal"><TextBlock Text="&#xE945;" FontFamily="{StaticResource IconFont}" FontSize="20" Foreground="{StaticResource Accent}" Margin="0,2,12,0"/><TextBlock Text="Quick Actions" Style="{StaticResource CardTitle}"/></StackPanel>
        <TextBlock Text="Jump straight to what you need." Style="{StaticResource CardSub}" Margin="32,2,0,14"/>
-       <UniformGrid Columns="2">
+       <UniformGrid x:Name="HomeQuickActions" Columns="2">
         <Button x:Name="Browse" Style="{StaticResource QuickTile}" Background="#14291F" BorderBrush="#1F4A36" AutomationProperties.Name="Browse optimizations"><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
          <Border Width="38" Height="38" CornerRadius="10" Background="#1C4A36"><TextBlock Text="&#xE945;" FontFamily="{StaticResource IconFont}" FontSize="17" Foreground="#5FE0AE" HorizontalAlignment="Center" VerticalAlignment="Center"/></Border>
-         <StackPanel Grid.Column="1" Margin="12,0,6,0" VerticalAlignment="Center"><TextBlock Text="Optimizations" FontWeight="SemiBold" FontSize="13.5"/><TextBlock Text="Choose what to change" FontSize="11" Foreground="{StaticResource Muted}" TextTrimming="CharacterEllipsis"/></StackPanel>
+         <StackPanel Grid.Column="1" Margin="12,0,6,0" VerticalAlignment="Center"><TextBlock Text="Optimizations" FontWeight="SemiBold" FontSize="13.5" TextWrapping="Wrap"/><TextBlock Text="Choose what to change" FontSize="11" Foreground="{StaticResource Muted}" TextWrapping="Wrap"/></StackPanel>
          <TextBlock Grid.Column="2" Text="&#xE76C;" FontFamily="{StaticResource IconFont}" FontSize="11" Foreground="{StaticResource Muted}" VerticalAlignment="Center"/></Grid></Button>
         <Button x:Name="Games" Style="{StaticResource QuickTile}" Margin="0,0,0,10" Background="#131E33" BorderBrush="#1F3560" AutomationProperties.Name="Open game library"><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
          <Border Width="38" Height="38" CornerRadius="10" Background="#1D3260"><TextBlock Text="&#xE7FC;" FontFamily="{StaticResource IconFont}" FontSize="17" Foreground="#8DB4FA" HorizontalAlignment="Center" VerticalAlignment="Center"/></Border>
-         <StackPanel Grid.Column="1" Margin="12,0,6,0" VerticalAlignment="Center"><TextBlock Text="Game Library" FontWeight="SemiBold" FontSize="13.5"/><TextBlock Text="Browse &amp; launch" FontSize="11" Foreground="{StaticResource Muted}" TextTrimming="CharacterEllipsis"/></StackPanel>
+         <StackPanel Grid.Column="1" Margin="12,0,6,0" VerticalAlignment="Center"><TextBlock Text="Game Library" FontWeight="SemiBold" FontSize="13.5" TextWrapping="Wrap"/><TextBlock Text="Browse &amp; launch" FontSize="11" Foreground="{StaticResource Muted}" TextWrapping="Wrap"/></StackPanel>
          <TextBlock Grid.Column="2" Text="&#xE76C;" FontFamily="{StaticResource IconFont}" FontSize="11" Foreground="{StaticResource Muted}" VerticalAlignment="Center"/></Grid></Button>
         <Button x:Name="QaMonitor" Style="{StaticResource QuickTile}" Background="#231A3A" BorderBrush="#3E2E69" AutomationProperties.Name="Open PC monitor"><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
          <Border Width="38" Height="38" CornerRadius="10" Background="#35265A"><TextBlock Text="&#xE7F4;" FontFamily="{StaticResource IconFont}" FontSize="17" Foreground="#C0A3F7" HorizontalAlignment="Center" VerticalAlignment="Center"/></Border>
-         <StackPanel Grid.Column="1" Margin="12,0,6,0" VerticalAlignment="Center"><TextBlock Text="PC Monitor" FontWeight="SemiBold" FontSize="13.5"/><TextBlock Text="Load, heat &amp; hardware" FontSize="11" Foreground="{StaticResource Muted}" TextTrimming="CharacterEllipsis"/></StackPanel>
+         <StackPanel Grid.Column="1" Margin="12,0,6,0" VerticalAlignment="Center"><TextBlock Text="PC Monitor" FontWeight="SemiBold" FontSize="13.5" TextWrapping="Wrap"/><TextBlock Text="Load, heat &amp; hardware" FontSize="11" Foreground="{StaticResource Muted}" TextWrapping="Wrap"/></StackPanel>
          <TextBlock Grid.Column="2" Text="&#xE76C;" FontFamily="{StaticResource IconFont}" FontSize="11" Foreground="{StaticResource Muted}" VerticalAlignment="Center"/></Grid></Button>
-        <Button x:Name="QaDiagnostics" Style="{StaticResource QuickTile}" Margin="0,0,0,10" Background="#2E2012" BorderBrush="#5A3E1E" AutomationProperties.Name="Check for problems"><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-         <Border Width="38" Height="38" CornerRadius="10" Background="#4A3219"><TextBlock Text="&#xE9D9;" FontFamily="{StaticResource IconFont}" FontSize="17" Foreground="#F2C170" HorizontalAlignment="Center" VerticalAlignment="Center"/></Border>
-         <StackPanel Grid.Column="1" Margin="12,0,6,0" VerticalAlignment="Center"><TextBlock Text="Diagnostics" FontWeight="SemiBold" FontSize="13.5"/><TextBlock Text="Check for problems" FontSize="11" Foreground="{StaticResource Muted}" TextTrimming="CharacterEllipsis"/></StackPanel>
+        <Button x:Name="QaDiagnostics" Style="{StaticResource QuickTile}" Margin="0,0,0,10" Background="{DynamicResource ThemeHex2E2012Brush}" BorderBrush="{DynamicResource ThemeHex5A3E1EBrush}" AutomationProperties.Name="Check for problems"><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+         <Border Width="38" Height="38" CornerRadius="10" Background="{DynamicResource ThemeHex4A3219Brush}"><TextBlock Text="&#xE9D9;" FontFamily="{StaticResource IconFont}" FontSize="17" Foreground="#F2C170" HorizontalAlignment="Center" VerticalAlignment="Center"/></Border>
+         <StackPanel Grid.Column="1" Margin="12,0,6,0" VerticalAlignment="Center"><TextBlock Text="Diagnostics" FontWeight="SemiBold" FontSize="13.5" TextWrapping="Wrap"/><TextBlock Text="Check for problems" FontSize="11" Foreground="{StaticResource Muted}" TextWrapping="Wrap"/></StackPanel>
          <TextBlock Grid.Column="2" Text="&#xE76C;" FontFamily="{StaticResource IconFont}" FontSize="11" Foreground="{StaticResource Muted}" VerticalAlignment="Center"/></Grid></Button>
        </UniformGrid>
       </StackPanel></Border>
      </Grid>
      <!-- Games + Activity + Status -->
-     <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="1.6*"/><ColumnDefinition Width="1.05*"/><ColumnDefinition Width="0.95*"/></Grid.ColumnDefinitions>
+     <Grid x:Name="HomeDetails"><Grid.ColumnDefinitions><ColumnDefinition Width="1.6*"/><ColumnDefinition Width="1.05*"/><ColumnDefinition Width="0.95*"/></Grid.ColumnDefinitions>
       <Border Style="{StaticResource Card}" Margin="0,0,14,0"><StackPanel>
        <StackPanel Orientation="Horizontal"><TextBlock Text="&#xE8B7;" FontFamily="{StaticResource IconFont}" FontSize="19" Foreground="{StaticResource Muted}" Margin="0,2,12,0"/><TextBlock Text="Your Games" Style="{StaticResource CardTitle}"/></StackPanel>
        <TextBlock Text="Quick access to games FramePilot has found." Style="{StaticResource CardSub}" Margin="31,2,0,14"/>
@@ -352,19 +346,18 @@
        <TextBlock x:Name="GamesEmpty" Text="No games found yet. Open the Game Library and choose a scan." FontSize="13" Foreground="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,2,0,0"/>
       </StackPanel></Border>
       <Border Grid.Column="1" Style="{StaticResource Card}" Margin="0,0,14,0"><StackPanel>
-       <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-        <StackPanel Orientation="Horizontal"><TextBlock Text="&#xE823;" FontFamily="{StaticResource IconFont}" FontSize="19" Foreground="{StaticResource Muted}" Margin="0,2,12,0"/><TextBlock Text="Recent Activity" Style="{StaticResource CardTitle}"/></StackPanel>
-        <Button x:Name="Recover" Grid.Column="1" Style="{StaticResource LinkButton}" Content="Open Recovery" AutomationProperties.Name="Open Recovery"/></Grid>
+       <WrapPanel><StackPanel Orientation="Horizontal"><TextBlock Text="&#xE823;" FontFamily="{StaticResource IconFont}" FontSize="19" Foreground="{StaticResource Muted}" Margin="0,2,12,0"/><TextBlock Text="Recent Activity" Style="{StaticResource CardTitle}"/></StackPanel>
+        <Button x:Name="Recover" Grid.Column="1" Style="{StaticResource LinkButton}" Content="Open Recovery" AutomationProperties.Name="Open Recovery"/></WrapPanel>
        <TextBlock Text="Changes FramePilot has made." Style="{StaticResource CardSub}" Margin="31,2,0,12"/>
        <StackPanel x:Name="ActivityList"/>
        <TextBlock x:Name="Counts" FontSize="11.5" Foreground="{StaticResource Dim}" TextWrapping="Wrap" Margin="0,10,0,0"/>
       </StackPanel></Border>
-      <Border x:Name="AllSetCard" Grid.Column="2" CornerRadius="14" BorderBrush="#3A2A1D" BorderThickness="1" Padding="20">
-       <Border.Background><LinearGradientBrush StartPoint="0,0" EndPoint="0,1"><GradientStop Color="#4A2E17" Offset="0"/><GradientStop Color="#1A1310" Offset="1"/></LinearGradientBrush></Border.Background>
+      <Border x:Name="AllSetCard" Grid.Column="2" CornerRadius="14" BorderBrush="{DynamicResource ThemeHex3A2A1DBrush}" BorderThickness="1" Padding="20">
+       <Border.Background><LinearGradientBrush StartPoint="0,0" EndPoint="0,1"><GradientStop Color="{DynamicResource ThemeHex4A2E17Color}" Offset="0"/><GradientStop Color="#1A1310" Offset="1"/></LinearGradientBrush></Border.Background>
        <StackPanel VerticalAlignment="Bottom">
-        <Border x:Name="AllSetBadge" Width="34" Height="34" CornerRadius="17" Background="#F0A93B" HorizontalAlignment="Left" Margin="0,0,0,12"><TextBlock x:Name="AllSetGlyph" Text="&#xE73E;" FontFamily="{StaticResource IconFont}" FontSize="15" Foreground="#1A1109" HorizontalAlignment="Center" VerticalAlignment="Center"/></Border>
+        <Border x:Name="AllSetBadge" Width="34" Height="34" CornerRadius="17" Background="#F0A93B" HorizontalAlignment="Left" Margin="0,0,0,12"><TextBlock x:Name="AllSetGlyph" Text="&#xE73E;" FontFamily="{StaticResource IconFont}" FontSize="15" Foreground="{DynamicResource ThemeHex1A1109Brush}" HorizontalAlignment="Center" VerticalAlignment="Center"/></Border>
         <TextBlock x:Name="AllSetTitle" Text="Monitoring is off" FontSize="22" FontWeight="SemiBold" TextWrapping="Wrap"/>
-        <TextBlock x:Name="AllSetText" Text="Turn on live monitoring to see how your PC is doing." FontSize="13" Foreground="#D9CFC4" TextWrapping="Wrap" Margin="0,6,0,16"/>
+        <TextBlock x:Name="AllSetText" Text="Turn on live monitoring to see how your PC is doing." FontSize="13" Foreground="{DynamicResource ThemeHexD9CFC4Brush}" TextWrapping="Wrap" Margin="0,6,0,16"/>
         <Button x:Name="Hardware" Style="{StaticResource PrimaryButton}" HorizontalAlignment="Left" Content="View Details  &#x2192;" AutomationProperties.Name="View hardware details"/>
        </StackPanel>
       </Border>

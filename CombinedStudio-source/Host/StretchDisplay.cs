@@ -18,12 +18,15 @@ internal sealed class StretchState {
  public StretchResolution? Original {get;set;}
  public uint Frequency {get;set;}
  public uint Bits {get;set;}
+ public uint? OriginalScaling {get;set;}
+ public bool FillMonitor {get;set;}=true;
  public bool AutoRestore {get;set;}=true;
  public List<string> Presets {get;set;}=new();
 }
 internal interface IStretchDisplay {
  (string Device,StretchResolution Resolution,uint Frequency,uint Bits) Current();
  void Apply(string device,StretchResolution resolution,uint frequency,uint bits);
+ uint? ReadScaling(string device)=>null;void SetScaling(string device,uint scaling){}
 }
 internal sealed class WindowsStretchDisplay:IStretchDisplay {
  [StructLayout(LayoutKind.Sequential,CharSet=CharSet.Unicode)] internal struct DisplayDevice {
@@ -43,6 +46,7 @@ internal sealed class WindowsStretchDisplay:IStretchDisplay {
  [DllImport("user32.dll",CharSet=CharSet.Unicode)]static extern bool EnumDisplayDevices(string device,uint index,ref DisplayDevice info,uint flags);
  [DllImport("user32.dll",CharSet=CharSet.Unicode)]static extern bool EnumDisplaySettings(string device,int mode,ref Mode settings);
  [DllImport("user32.dll",CharSet=CharSet.Unicode)]static extern int ChangeDisplaySettingsEx(string device,ref Mode settings,IntPtr window,uint flags,IntPtr parameter);
+ public uint? ReadScaling(string device)=>CrosshairDisplay.Scaling(device);public void SetScaling(string device,uint scaling)=>CrosshairDisplay.Scaling(device,scaling);
  static Mode Read(string device,int index){var mode=new Mode{Size=(ushort)Marshal.SizeOf<Mode>()};if(!EnumDisplaySettings(device,index,ref mode))throw new InvalidOperationException("Windows could not read this display mode.");return mode;}
  public (string Device,StretchResolution Resolution,uint Frequency,uint Bits) Current(){
   for(uint i=0;;i++){var info=new DisplayDevice{Size=Marshal.SizeOf<DisplayDevice>()};if(!EnumDisplayDevices(null,i,ref info,0))break;if((info.Flags&5)==5){var mode=Read(info.Name,-1);return(info.Name,new((int)mode.Width,(int)mode.Height),mode.Frequency,mode.Bits);}}
@@ -66,13 +70,13 @@ internal sealed class StretchController {
  internal StretchController(IStretchDisplay display,string path){this.display=display;this.path=path;State=File.Exists(path)?JsonSerializer.Deserialize<StretchState>(File.ReadAllText(path))??new():new();State.Presets??=new();}
  internal void Save(){Directory.CreateDirectory(Path.GetDirectoryName(path)!);string temp=path+".tmp";File.WriteAllText(temp,JsonSerializer.Serialize(State));File.Move(temp,path,true);}
  internal (string Device,StretchResolution Resolution,uint Frequency,uint Bits) Current()=>display.Current();
- internal void Apply(StretchResolution resolution){var current=Current();if(current.Resolution==resolution)return;
+ internal void Apply(StretchResolution resolution){var current=Current();if(current.Resolution==resolution&&(!State.FillMonitor||display.ReadScaling(current.Device) is not uint same||same==3))return;
   if(State.Original.HasValue&&State.Device!=current.Device)throw new InvalidOperationException("The primary display changed. Restore the saved display before starting another stretch session.");
   bool captured=!State.Original.HasValue;
-  if(captured){State.Device=current.Device;State.Original=current.Resolution;State.Frequency=current.Frequency;State.Bits=current.Bits;Save();}
-  try{display.Apply(current.Device,resolution,current.Frequency,current.Bits);}catch{if(captured){State.Original=null;Save();}throw;}
+  if(captured){State.Device=current.Device;State.Original=current.Resolution;State.Frequency=current.Frequency;State.Bits=current.Bits;State.OriginalScaling=display.ReadScaling(current.Device);Save();}
+  try{display.Apply(current.Device,resolution,current.Frequency,current.Bits);if(State.FillMonitor)display.SetScaling(current.Device,3);}catch{if(captured&&Current().Resolution==State.Original){State.Original=null;State.OriginalScaling=null;Save();}throw;}
  }
- internal void Restore(){if(!State.Original.HasValue)return;display.Apply(State.Device,State.Original.Value,State.Frequency,State.Bits);State.Original=null;sawGame=false;Save();}
+ internal void Restore(){if(!State.Original.HasValue)return;display.Apply(State.Device,State.Original.Value,State.Frequency,State.Bits);if(State.OriginalScaling is uint scaling)display.SetScaling(State.Device,scaling);State.OriginalScaling=null;State.Original=null;sawGame=false;Save();}
  internal bool ObserveGame(bool running){if(!State.Original.HasValue){sawGame=false;return false;}if(running)sawGame=true;else if(sawGame&&State.AutoRestore){Restore();return true;}return false;}
  internal void AddPreset(string input){string value=StretchResolution.Parse(input).ToString();if(!State.Presets.Contains(value)){State.Presets.Add(value);Save();}}
  internal static bool GameRunning(){var processes=Process.GetProcessesByName("VALORANT-Win64-Shipping");try{return processes.Length>0;}finally{foreach(var process in processes)process.Dispose();}}

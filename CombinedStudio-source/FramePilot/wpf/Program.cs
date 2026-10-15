@@ -59,6 +59,9 @@ namespace FramePilot {
   internal IEnumerable<RadioButton> NavigationItems=>navigation.Values;
   internal void ClearNavigationSelection(){foreach(var item in navigation.Values)item.IsChecked=false;UpdateNavGlyphs();}
   internal void SelectPage(string name){Navigate(name);}
+  internal string StartupPageOverride;
+  StackPanel homeTabs;
+  internal void EnableHomeTabs(){var content=Get<Grid>("ContentGrid");content.RowDefinitions.Add(new RowDefinition{Height=GridLength.Auto});content.RowDefinitions.Add(new RowDefinition{Height=new GridLength(1,GridUnitType.Star)});foreach(UIElement child in content.Children)Grid.SetRow(child,1);homeTabs=new StackPanel{Orientation=Orientation.Horizontal,Margin=new Thickness(24,6,24,8)};foreach(var tab in new[]{new[]{"Overview","Home"},new[]{"Game library","Game Library"}}){string route=tab[0];var button=new Button{Content=tab[1],Tag=route,MinHeight=40,Padding=new Thickness(18,8,18,8),Margin=new Thickness(0,0,10,0)};button.Click+=(_,_)=>Navigate(route);homeTabs.Children.Add(button);}content.Children.Add(homeTabs);}
   internal void StartLiveMonitoring(){features.WpfMonitoring=true;Sync();}
   internal void SetWorkspaceActive(bool active){workspaceActive=active;features.WpfPause(!active||Window.WindowState==WindowState.Minimized);monitorPage.Model.SetActive(active&&page=="PC monitor"&&Window.WindowState!=WindowState.Minimized);}
   readonly MainForm features;
@@ -76,6 +79,7 @@ namespace FramePilot {
   public WpfShell(string dataDirectory=null) {
    testing=dataDirectory!=null;
    using(var stream=Assembly.GetExecutingAssembly().GetManifestResourceStream("MainWindow.xaml"))Window=(Window)XamlReader.Load(stream);
+   CombinedStudio.ResponsiveLayout.Tiles(Get<System.Windows.Controls.Primitives.UniformGrid>("HomeMetrics"),235,4);CombinedStudio.ResponsiveLayout.Tiles(Get<System.Windows.Controls.Primitives.UniformGrid>("HomeQuickActions"),260,2);CombinedStudio.ResponsiveLayout.Columns(Get<Grid>("HomePerformance"),1100);CombinedStudio.ResponsiveLayout.Columns(Get<Grid>("HomeDetails"),1100);
    features=new MainForm(dataDirectory);features.WpfPrepare();
    monitorPage=new MonitorPage(()=>new FramePilot.Monitoring.PythonMonitorService(),FramePilot.Monitoring.MonitorSettings.Load());monitorPage.Visibility=Visibility.Collapsed;Get<Grid>("ContentGrid").Children.Add(monitorPage);diskExplorer=new DiskExplorerPage{Visibility=Visibility.Collapsed};Get<Grid>("ContentGrid").Children.Add(diskExplorer);gameLibrary=new GameLibraryPage(features){Visibility=Visibility.Collapsed};Get<Grid>("ContentGrid").Children.Add(gameLibrary);
    host=Get<WindowsFormsHost>("LegacyHost");
@@ -100,7 +104,7 @@ namespace FramePilot {
      if(features.Icon!=null)Window.Icon=Imaging.CreateBitmapSourceFromHIcon(features.Icon.Handle,Int32Rect.Empty,System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
     }catch{};
    };
-   Window.Loaded+=delegate{features.Show();ready=true;Navigate(features.WpfPage);Sync();ScanInstalledGames();};
+   Window.Loaded+=delegate{features.Show();ready=true;Navigate(StartupPageOverride??features.WpfPage);Sync();ScanInstalledGames();};
    Window.Closed+=delegate{shutdown.Cancel();shutdown.Dispose();};
    Window.StateChanged+=delegate{UpdateChrome();features.WpfPause(!workspaceActive||Window.WindowState==WindowState.Minimized);monitorPage.Model.SetActive(workspaceActive&&page=="PC monitor"&&Window.WindowState!=WindowState.Minimized);};
    Window.Closing+=async delegate(object sender,System.ComponentModel.CancelEventArgs e){
@@ -113,12 +117,13 @@ namespace FramePilot {
   }
   void QueueClose(){Window.Dispatcher.BeginInvoke(new Action(()=>Window.Close()));}
   T Get<T>(string name) where T:class{return (T)Window.FindName(name);}
-  static Brush Brush(string value){var b=(SolidColorBrush)new BrushConverter().ConvertFromString(value);b.Freeze();return b;}
+  static Brush Brush(string value)=>CombinedStudio.ThemePalette.Brush(value);
   void Click(string name,Action action){Get<Button>(name).Click+=delegate{Guard(action);};}
   void Guard(Action action){try{action();}catch(Exception e){if(testing)throw;MessageBox.Show(Window,e.GetBaseException().Message,"FramePilot",MessageBoxButton.OK,MessageBoxImage.Information);}}
   void QueueSync(){if(pending||closing||!ready)return;pending=true;Window.Dispatcher.BeginInvoke(new Action(delegate{pending=false;if(!closing&&!features.IsDisposed)Sync();}));}
-  void Navigate(string name){if(!ready)return;if(Activated!=null)Activated();Guard(delegate{if(features.WpfPage!=name)features.WpfNavigate(name);Display(name);Sync();});}
+  void Navigate(string name){if(!ready)return;Guard(delegate{if(features.WpfPage!=name)features.WpfNavigate(name);Display(name);Sync();});if(Activated!=null)Activated();}
   void Display(string name){
+   if(homeTabs!=null){homeTabs.Visibility=name=="Overview"||name=="Game library"?Visibility.Visible:Visibility.Collapsed;foreach(Button tab in homeTabs.Children){tab.FontWeight=(string)tab.Tag==name?FontWeights.Bold:FontWeights.Normal;tab.Foreground=(string)tab.Tag==name?accentHot:ink;}}
    if(!PrimaryNav.Any(item=>item[0]==name))MoreToolsExpanded=true;
    bool changed=page!=name;page=name;diskExplorer.Visibility=name=="Disk explorer"?Visibility.Visible:Visibility.Collapsed;monitorPage.Visibility=name=="PC monitor"?Visibility.Visible:Visibility.Collapsed;monitorPage.Model.SetActive(workspaceActive&&name=="PC monitor"&&Window.WindowState!=WindowState.Minimized);
    bool tools=name!="Overview"&&name!="Optimizations"&&name!="PC monitor"&&name!="Disk explorer"&&name!="Game library";

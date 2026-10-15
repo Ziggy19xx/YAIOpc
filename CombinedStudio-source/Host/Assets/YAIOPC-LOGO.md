@@ -1,0 +1,11 @@
+# YAIO PC logo
+
+October 13 revision: the current logo is a desktop PC tower with the Y integrated into the front panel. The original hub mark is preserved in `yaiopc-logo-hub-v1.png`. Generated with the built-in image generation tool using the original PNG as the edit reference.
+
+Revision prompt: Edit the reference YAIO PC emblem into a clear desktop gaming PC tower with the bold Y integrated into the front panel. Preserve its warm golden yellow, amber beveled edges and dark graphite premium style. Replace the abstract hexagonal box silhouette with a compact upright rectangular PC chassis in slight three-quarter perspective, clear front face and narrower side face, small feet, one discreet power button and two broad side ventilation slits. The large gold Y occupies the front panel as its defining structural design. It must unmistakably read as a PC tower and a Y at a glance. Single cohesive app icon, chunky clean geometry readable at small size, centered square canvas, transparent background. No monitor, no keyboard, no text, no F, no separate floating Y, no scene or mockup, no outer glow or shadows outside the silhouette.
+
+Created with the built-in image generation tool. `yaiopc-logo.png` is the transparent master. `yaiopc.ico` contains 16, 24, 32, 48, 64, 128 and 256 pixel versions of the same mark. These assets replace the FramePilot F for the combined application.
+
+Generation prompt:
+
+Use case: logo-brand. Create a single polished app icon emblem for YAIO PC (Your All-in-One PC), a premium Windows gaming performance and audio customization suite with a dark interface and warm yellow accent. A bold geometric stylized Y integrated with a rounded hexagonal circuit hub: two upper branches converge into a central vertical stem, suggesting many tools unified into one. Warm electric golden yellow with restrained amber depth, dark graphite inset accents, simple chunky vector-like silhouette, razor-sharp clean edges. Square composition, mark fills about 80 percent of canvas, readable at 16 pixels. Truly transparent background. Symbol only, no lettering or wordmark, no F, no wings, no controller, no tiny circuit traces, no glow outside the mark, no shadow outside mark, no mockup or border. Original distinctive confident modern identity.

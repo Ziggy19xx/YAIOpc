@@ -10,8 +10,8 @@ internal sealed record EqProfile(string Name, float[] Bands, float Preamp = 0)
 {
     public override string ToString()=>Name;
 }
-internal sealed record EqConfig(string? Source, string? Output, EqProfile Current, EqProfile[] Saved, bool Advanced = false);
-internal sealed record EqParameters(float[] Bands, float Preamp, bool Bypass);
+internal sealed record EqConfig(string? Source, string? Output, EqProfile Current, EqProfile[] Saved, bool Advanced = false, bool AutomaticHeadroom = true, bool QuietBoost = false, bool StrongLimiter = false, bool StartEnabled = true, string? LastPreset = null);
+internal sealed record EqParameters(float[] Bands, float Preamp, bool Bypass, bool AutomaticHeadroom = true, bool QuietBoost = false, bool StrongLimiter = false);
 
 // Independent stereo playback DSP. Settings are immutable snapshots; filter history stays on the render thread.
 internal sealed class HeadphoneEqProvider : ISampleProvider
@@ -21,7 +21,7 @@ internal sealed class HeadphoneEqProvider : ISampleProvider
     readonly BiQuadFilter[][] filters;
     readonly float[] gains = new float[10];
     EqParameters parameters = new(new float[10],0,false);
-    double level = 1, mix = 1, limiter = 1;
+    double level = 1, mix = 1, limiter = 1, envelope, quietGain=1;
     int update;
     internal float Peak {get;private set;}
     public WaveFormat WaveFormat => source.WaveFormat;
@@ -30,9 +30,9 @@ internal sealed class HeadphoneEqProvider : ISampleProvider
         this.source=source;
         filters=Enumerable.Range(0,WaveFormat.Channels).Select(_=>Frequencies.Select(f=>BiQuadFilter.PeakingEQ(WaveFormat.SampleRate,Math.Min(f,WaveFormat.SampleRate*.45f),1.4f,0)).ToArray()).ToArray();
     }
-    internal void Set(EqParameters value)=>Volatile.Write(ref parameters,new EqParameters(value.Bands.Select(v=>Math.Clamp(v,-12,12)).ToArray(),Math.Clamp(value.Preamp,-24,6),value.Bypass));
+    internal void Set(EqParameters value)=>Volatile.Write(ref parameters,new EqParameters(value.Bands.Select(v=>Math.Clamp(v,-12,12)).ToArray(),Math.Clamp(value.Preamp,-24,6),value.Bypass,value.AutomaticHeadroom,value.QuietBoost,value.StrongLimiter));
     // Sum of positive boosts gives conservative headroom, including overlapping bands.
-    internal static float Headroom(EqParameters value)=>Math.Min(0,-value.Bands.Where(v=>v>0).Sum())+value.Preamp;
+    internal static float Headroom(EqParameters value)=>(value.AutomaticHeadroom&&!value.Bypass?Math.Min(0,-value.Bands.Where(v=>v>0).Sum()):0)+value.Preamp;
     public int Read(float[] buffer,int offset,int count)
     {
         int read=source.Read(buffer,offset,count),channels=WaveFormat.Channels;
@@ -49,13 +49,16 @@ internal sealed class HeadphoneEqProvider : ISampleProvider
             level+=(target-level)*smoothing;mix+=((settings.Bypass?0:1)-mix)*smoothing;
             double framePeak=0;
             for(int ch=0;ch<channels&&i+ch<offset+read;ch++){
-                float dry=buffer[i+ch],wet=(float)(dry*level);
+                float dry=buffer[i+ch],wet=dry;
                 foreach(var filter in filters[ch])wet=filter.Transform(wet);
-                buffer[i+ch]=(float)(dry*(1-mix)+wet*mix);framePeak=Math.Max(framePeak,Math.Abs(buffer[i+ch]));
+                buffer[i+ch]=(float)((dry*(1-mix)+wet*mix)*level);framePeak=Math.Max(framePeak,Math.Abs(buffer[i+ch]));
             }
-            double needed=Math.Min(1,.89125094/Math.Max(framePeak,1e-12));
+            envelope+=(framePeak-envelope)*(1-Math.Exp(-1/(WaveFormat.SampleRate*(framePeak>envelope?.01:.15))));
+            double requestedBoost=settings.QuietBoost?Math.Clamp(.15/Math.Max(envelope,1e-5),1,1.995262):1;quietGain+=(requestedBoost-quietGain)*smoothing;
+            double ceiling=settings.StrongLimiter?.50118723:.89125094;
+            double needed=Math.Min(1,ceiling/Math.Max(framePeak*quietGain,1e-12));
             limiter=needed<limiter?needed:limiter+(needed-limiter)*(1-Math.Exp(-1/(WaveFormat.SampleRate*.1)));
-            for(int ch=0;ch<channels&&i+ch<offset+read;ch++){buffer[i+ch]=(float)Math.Clamp(buffer[i+ch]*limiter,-.89125094,.89125094);peak=Math.Max(peak,Math.Abs(buffer[i+ch]));}
+            for(int ch=0;ch<channels&&i+ch<offset+read;ch++){buffer[i+ch]=(float)Math.Clamp(buffer[i+ch]*quietGain*limiter,-ceiling,ceiling);peak=Math.Max(peak,Math.Abs(buffer[i+ch]));}
         }
         Peak=(float)peak;return read;
     }
@@ -69,7 +72,7 @@ internal sealed class HeadphoneEqProvider : ISampleProvider
             var denominator=(1+alpha/a)-2*cos*z+(1-alpha/a)*z*z;
             db+=20*Math.Log10((numerator/denominator).Magnitude);
         }
-        return settings.Bypass?0:db;
+        return settings.Bypass?settings.Preamp:db;
     }
 }
 
@@ -127,7 +130,11 @@ internal sealed class HeadphoneEqStore
         new("Bass cushion",new float[]{4,3,2,0,-1,0,0,0,-.5f,-1}),
         new("Voice clarity",new float[]{-2,-2,-1,0,0,1,2,1,-1,-1}),
         new("Game focus",new float[]{-2,-1,-1,0,0,1,2,2,0,-1}),
-        new("Soft treble",new float[]{1,1,0,0,0,0,-1,-2,-3,-2})};
+        new("Soft treble",new float[]{1,1,0,0,0,0,-1,-2,-3,-2}),
+        new("Footstep Focus",new float[]{-3,-2,-1,0,0,4,5,4,1,-1}),
+        new("Combat Clarity",new float[]{3,2,1,0,-1,2,3,2,1,0}),
+        new("Spatial Awareness",new float[]{-1,-1,0,1,2,2,2,1,0,-1}),
+        new("Treble detail",new float[]{-1,-1,0,0,0,1,2,3,4,2})};
     internal HeadphoneEqStore(string? root)
     {
         path=Path.Combine(root??Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),"VelvetVoice"),"headphone-eq.json");
@@ -135,5 +142,6 @@ internal sealed class HeadphoneEqStore
         try{if(File.Exists(path)){var saved=JsonSerializer.Deserialize<EqConfig>(File.ReadAllText(path));if(saved!=null&&Valid(saved.Current)&&saved.Saved!=null&&saved.Saved.All(Valid))Config=saved;}}catch(Exception e) when(e is IOException or JsonException or UnauthorizedAccessException){}
     }
     internal static bool Valid(EqProfile p)=>p!=null&&!string.IsNullOrWhiteSpace(p.Name)&&p.Bands?.Length==10&&p.Bands.All(v=>float.IsFinite(v)&&v>=-12&&v<=12)&&float.IsFinite(p.Preamp)&&p.Preamp>=-24&&p.Preamp<=6;
+    internal static string LastPresetName(EqConfig config)=>config.LastPreset??(config.Current.Name=="Custom"?Factory.Concat(config.Saved).FirstOrDefault(x=>x.Bands.SequenceEqual(config.Current.Bands))?.Name??"Custom":config.Current.Name);
     internal void Save(){Directory.CreateDirectory(Path.GetDirectoryName(path)!);File.WriteAllText(path,JsonSerializer.Serialize(Config));}
 }

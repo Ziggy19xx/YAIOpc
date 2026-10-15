@@ -1,0 +1,81 @@
+{
+  "name": "Center O",
+  "pos": {
+    "x": 0,
+    "y": 0
+  },
+  "model": [
+    {
+      "dot": {
+        "diameter": 8,
+        "opacity": 1,
+        "color": "#FF0000",
+        "shape": "ring",
+        "blur": 0,
+        "thickness": 1.3
+      },
+      "line": {
+        "length": 0,
+        "thickness": 20,
+        "offset": 100,
+        "opacity": 0,
+        "color": "#EE0404",
+        "shape": "rectangle",
+        "blur": 0,
+        "rotation": 0,
+        "visible": [
+          "left",
+          "bottom",
+          "top",
+          "right"
+        ]
+      },
+      "outline": {
+        "thickness": 0.2,
+        "opacity": 1,
+        "color": "#FF0000",
+        "blur": 0
+      },
+      "firingOptions": {
+        "tShapeWhenFiring": true,
+        "firingOffset": 0,
+        "bloomDirection": "outward",
+        "finalOpacity": 1,
+        "dot": {
+          "color": "#FF0000"
+        },
+        "line": {
+          "color": "#0400F1",
+          "visible": [
+            "left",
+            "bottom",
+            "right"
+          ]
+        },
+        "outline": {
+          "color": "#EA0B0B"
+        },
+        "mouseButton": "left",
+        "loop": false,
+        "duration": 0.5,
+        "startDelay": 0.1,
+        "position": {},
+        "layer": {},
+        "easing": "linear",
+        "version": 2,
+        "direction": "normal",
+        "pressType": "hold",
+        "releaseBehavior": "reset"
+      },
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "layer": {
+        "size": 1.5
+      },
+      "type": "model",
+      "migrationVersion": 2
+    }
+  ]
+}
