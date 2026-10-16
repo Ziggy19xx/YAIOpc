@@ -1,3 +1,23 @@
+# Expanded crosshair size controls — October 15, 2026
+
+Latest portable build: outputs/YAIOpc-Crosshair-Size/YAIOpc.exe. Crosshair size supports 1–500%; independent width/height support 10–300%. Each has a slider, exact whole-number entry and ±1/±10 buttons. Values clamp to supported ranges, apply to preview/overlay immediately and persist through existing settings. Expanded settings validation and overlay surface cap to support the range. Physical-pixel minimum line behavior remains.
+
+Build passed with existing SteamArtwork warning. --crosshair-test exited 0; --layout-review exited 0 with no overflow candidates, and narrow crosshair controls were visually inspected. Reports: outputs/Crosshair-Size-Validation and outputs/Crosshair-Size-Layout. Includes previous True Stretch side guide. Changes local/uncommitted.
+# True Stretch side guide — October 15, 2026
+
+Latest portable build: outputs/YAIOpc-TrueStretch-Guide/YAIOpc.exe. True Stretch now has a responsive right-hand setup guide (stacks below on narrow windows) with seven steps covering registered resolutions, full-panel GPU scaling, Windowed → Fullscreen + Fill → Windowed + Fill, Apply + fit, and restore. Adjacent resolution picker buttons only populate the input; no immediate display change.
+
+1080p choices: 1440x1080 (4:3), 1350x1080 (5:4), 1728x1080 (16:10), 1080x1080 (1:1), 1920x1080 (16:9 native). 1440p choices: 1920x1440 (4:3), 1800x1440 (5:4), 2304x1440 (16:10), 1440x1440 (1:1), 2560x1440 (16:9 native). Lower alternatives: 1280x960, 1600x1200, 1280x1024, 1600x1000. Notes distinguish example ratios from actual GPU support and native/no-stretch modes.
+
+Build passed with existing SteamArtwork warning. Stretch tests exited 0; layout review exited 0 at 1060 and 1480 widths with zero overflow candidates. Wide True Stretch screenshot visually inspected. Reports: outputs/TrueStretch-Guide-Validation and outputs/TrueStretch-Guide-Layout. No live display changes made for this UI update. Source changes local/uncommitted.
+# Storefront gaming redesign — October 15, 2026
+
+Existing yaiopc-store Site restyled using Opera GX and Voicemod as visual references: original angular panel geometry, bold condensed type, violet/cyan ambient lighting, prominent layered actual app screenshot and YAIOpc gold tower logo. Three accent modes (Cyber Gold / After Hours / Ice Circuit) apply immediately and persist locally. Same $5 USD preview cart; payments and fulfillment remain unconnected. Existing owner-private audience preserved. Desktop and 390px mobile hero/cart checked, theme switch verified, syntax passed and decorative grid overflow fixed. Screenshot: outputs/yaiopc-gaming-preview.png. Source commit c497c881abecc8bd2f3b11cf7fbc6b2f650f2736 pushed via Sites source helper. Remote deployment initiated (local Bash archive packaging unavailable). Site project appgprj_6ad1665ebbf08191ba157684879e0c1e. Deployment appgdep_6ad1776851948191ad8e96ff7264f315. Same URL: https://yaiopc-control-your-pc.idealwolf5.chatgpt.site.
+# YAIOpc storefront — October 15, 2026
+
+Website source is a separate nested Sites Git repository at yaiopc-store/. Do not add its .git, site credentials or desktop private source to public assets. Site identity: appgprj_6ad1665ebbf08191ba157684879e0c1e. Store source commit: 2bd6776107359981758e546037de2ed4c527d59f. Expected origin: https://yaiopc-control-your-pc.idealwolf5.chatgpt.site. Created owner-private; preserve access until explicitly changed.
+
+Static dist/ storefront with gold/green glass styling, scroll reveals, mobile layouts, actual app screenshots, feature content, $5 USD one-time price, cart drawer, preview name/email form, FAQ and information dialogs. Cart stores item indicator only; no form submission/order/payment/download fulfillment. User approved leaving payments unconnected. Public payment-link setting is dist/config.js; do not place secrets there. Before sales: seller/contact/legal information, tested requirements, payment provider, taxes and paid download/license fulfillment must be configured and tested. README has launch checklist. Local desktop/mobile browser QA passed; outputs/yaiopc-store-preview.png is saved. Native Sites private deployment was initiated using verified pushed source; local archive helper unavailable because Bash is absent, so remote packaging used. Private deployment succeeded: https://yaiopc-control-your-pc.idealwolf5.chatgpt.site. Owner sign-in is required; the deployed tab shows the ChatGPT sign-in gate.
 # Confirmed True Stretch method — October 15, 2026
 
 User confirmed this exact order produces both stretch and no black bars:

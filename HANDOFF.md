@@ -1,3 +1,15 @@
+# Expanded crosshair size controls — October 15, 2026
+
+Latest portable build: outputs/YAIOpc-Crosshair-Size/YAIOpc.exe. Crosshair size supports 1–500%; independent width/height support 10–300%. Each has a slider, exact whole-number entry and ±1/±10 buttons. Values clamp to supported ranges, apply to preview/overlay immediately and persist through existing settings. Expanded settings validation and overlay surface cap to support the range. Physical-pixel minimum line behavior remains.
+
+Build passed with existing SteamArtwork warning. --crosshair-test exited 0; --layout-review exited 0 with no overflow candidates, and narrow crosshair controls were visually inspected. Reports: outputs/Crosshair-Size-Validation and outputs/Crosshair-Size-Layout. Includes previous True Stretch side guide. Changes local/uncommitted.
+# True Stretch side guide — October 15, 2026
+
+Latest portable build: outputs/YAIOpc-TrueStretch-Guide/YAIOpc.exe. True Stretch now has a responsive right-hand setup guide (stacks below on narrow windows) with seven steps covering registered resolutions, full-panel GPU scaling, Windowed → Fullscreen + Fill → Windowed + Fill, Apply + fit, and restore. Adjacent resolution picker buttons only populate the input; no immediate display change.
+
+1080p choices: 1440x1080 (4:3), 1350x1080 (5:4), 1728x1080 (16:10), 1080x1080 (1:1), 1920x1080 (16:9 native). 1440p choices: 1920x1440 (4:3), 1800x1440 (5:4), 2304x1440 (16:10), 1440x1440 (1:1), 2560x1440 (16:9 native). Lower alternatives: 1280x960, 1600x1200, 1280x1024, 1600x1000. Notes distinguish example ratios from actual GPU support and native/no-stretch modes.
+
+Build passed with existing SteamArtwork warning. Stretch tests exited 0; layout review exited 0 at 1060 and 1480 widths with zero overflow candidates. Wide True Stretch screenshot visually inspected. Reports: outputs/TrueStretch-Guide-Validation and outputs/TrueStretch-Guide-Layout. No live display changes made for this UI update. Source changes local/uncommitted.
 # Confirmed True Stretch method — October 15, 2026
 
 User confirmed this exact order produces both stretch and no black bars:

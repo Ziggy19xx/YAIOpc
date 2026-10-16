@@ -28,3 +28,6 @@
 *.key
 /test-results/
 **/test-results.txt
+
+# Website source has its own private Git repository
+/yaiopc-store/
